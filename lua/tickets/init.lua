@@ -41,7 +41,7 @@ end
 
 local function setup_user_commands(opts)
     local target_file = opts.target_file or "todo.md"
-    vim.api.nvim.create_user_command("Td", function()
+    vim.api.nvim_create_user_command("Td", function()
         open_floating_file(target_file)
     end, {})
 end
