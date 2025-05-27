@@ -2,11 +2,20 @@ local M = {}
 
 local ui = require("tickets.ui")
 local utils = require("tickets.utils")
+local github = require("tickets.github")
 
 local function setup_user_commands(opts)
     local target_file = opts.target_file or "todo.md"
     vim.api.nvim_create_user_command("Td", function()
         ui.open_floating_file(target_file)
+    end, {})
+
+    vim.api.nvim_create_user_command("GithubFetch", function()
+        github.fetch_issues(function(issues)
+            for _, issue in ipairs(issues) do
+                print(string.format("#%d: %s", issue.number, issue.title))
+            end
+        end)
     end, {})
 
     local buf = utils.get_or_create_buf(target_file)
