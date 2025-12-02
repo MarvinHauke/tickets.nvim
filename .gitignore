@@ -17,6 +17,7 @@ luac.out
 # MCPs and CLI Agents
 .claude/
 .gemini/
+.serena/
 .mcp.json
 
 
