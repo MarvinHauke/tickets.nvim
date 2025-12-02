@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 
 function M.get_or_create_buf(path)
     local expanded_path = M.expand_path(path) -- reuse your existing expand_path
