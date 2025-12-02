@@ -1,5 +1,6 @@
 -- lua/tickets/github.lua
 local curl = require("plenary.curl")
+local utils = require("tickets.utils")
 local M = {}
 
 -- Check if gh CLI is available and authenticated
@@ -19,11 +20,14 @@ local function get_github_token()
 end
 
 -- Fetch issues using gh CLI
-local function fetch_issues_gh(callback)
-    local api_url = "repos/MarvinHauke/tickets.nvim/issues"
+local function fetch_issues_gh(repo, callback)
+    local api_url = "repos/" .. repo .. "/issues"
+
+    local stderr_data = {}
 
     vim.fn.jobstart({ "gh", "api", api_url }, {
         stdout_buffered = true,
+        stderr_buffered = true,
         on_stdout = function(_, data)
             if not data then
                 return
@@ -34,6 +38,11 @@ local function fetch_issues_gh(callback)
                     local ok, issues = pcall(vim.fn.json_decode, output)
                     if ok and callback then
                         callback(issues)
+                        if #issues == 0 then
+                            vim.notify("No issues found for this repository.", vim.log.levels.INFO)
+                        else
+                            vim.notify(#issues .. " issues fetched.", vim.log.levels.INFO)
+                        end
                     else
                         vim.notify("Failed to decode GitHub response", vim.log.levels.ERROR)
                     end
@@ -41,16 +50,15 @@ local function fetch_issues_gh(callback)
             end)
         end,
         on_stderr = function(_, data)
-            if data and #data > 0 then
-                vim.schedule(function()
-                    vim.notify("gh CLI error: " .. table.concat(data, "\n"), vim.log.levels.ERROR)
-                end)
+            if data then
+                stderr_data = data
             end
         end,
         on_exit = function(_, exit_code)
             if exit_code ~= 0 then
+                local error_msg = table.concat(stderr_data, "\n")
                 vim.schedule(function()
-                    vim.notify("gh CLI failed with exit code: " .. exit_code, vim.log.levels.ERROR)
+                    vim.notify("gh CLI failed (exit code " .. exit_code .. "): " .. error_msg, vim.log.levels.ERROR)
                 end)
             end
         end,
@@ -58,8 +66,8 @@ local function fetch_issues_gh(callback)
 end
 
 -- Fetch issues using curl (fallback when gh CLI unavailable)
-local function fetch_issues_curl(callback)
-    local api_url = "https://api.github.com/repos/MarvinHauke/tickets.nvim/issues"
+local function fetch_issues_curl(repo, callback)
+    local api_url = "https://api.github.com/repos/" .. repo .. "/issues"
     local headers = {
         ["Accept"] = "application/vnd.github.v3+json",
     }
@@ -78,6 +86,11 @@ local function fetch_issues_curl(callback)
                     if ok then
                         if callback then
                             callback(issues)
+                            if #issues == 0 then
+                                vim.notify("No issues found for this repository.", vim.log.levels.INFO)
+                            else
+                                vim.notify(#issues .. " issues fetched.", vim.log.levels.INFO)
+                            end
                         end
                     else
                         vim.notify("Failed to decode JSON", vim.log.levels.ERROR)
@@ -92,8 +105,14 @@ end
 
 -- Main fetch function with gh CLI support and fallback
 function M.fetch_issues(callback)
+    local repo = utils.get_current_repo()
+    if not repo then
+        vim.notify("Could not determine current GitHub repository. Are you in a git repo with a 'github.com' origin?", vim.log.levels.ERROR)
+        return
+    end
+
     if is_gh_available() then
-        fetch_issues_gh(callback)
+        fetch_issues_gh(repo, callback)
     else
         local token = get_github_token()
         if token == "" then
@@ -103,7 +122,7 @@ function M.fetch_issues(callback)
             )
             return
         end
-        fetch_issues_curl(callback)
+        fetch_issues_curl(repo, callback)
     end
 end
 

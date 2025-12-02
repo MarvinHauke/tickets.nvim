@@ -20,4 +20,32 @@ function M.expand_path(path)
     return path
 end
 
+function M.get_current_repo()
+    local handle = io.popen("git remote get-url origin 2>/dev/null")
+    if not handle then
+        return nil
+    end
+    local result = handle:read("*a")
+    handle:close()
+
+    if not result or result == "" then
+        return nil
+    end
+
+    -- Trim whitespace
+    result = result:gsub("%s+", "")
+
+    -- Parse owner/repo
+    -- Matches: git@github.com:Owner/Repo.git or https://github.com/Owner/Repo.git
+    local owner, repo = result:match("github%.com[:/]([%w%-%.]+)/([%w%-%.]+)")
+    
+    if owner and repo then
+        -- Remove .git suffix if present
+        repo = repo:gsub("%.git$", "")
+        return owner .. "/" .. repo
+    end
+
+    return nil
+end
+
 return M
