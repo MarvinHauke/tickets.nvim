@@ -76,3 +76,15 @@ Deepen the connection between code and issues, adding organizational tools.
 | **Blame to Issue**                 | Enhance `git blame` functionality to show the issue linked to a specific line of code by parsing issue references from commit messages.                                             |
 | **Issue to Code (Reverse Lookup)** | Show a list of files and lines where a specific issue is referenced (e.g., in a `TODO: #123` comment), displayed in a **quickfix/location list**.                                   |
 | **Custom Status Mapping**          | Allow users to map provider-specific statuses (e.g., "In Review," "Awaiting Feedback") to a simpler set of internal statuses for a unified experience across different providers.   |
+
+---
+
+## Data Persistence & Caching Strategy
+
+Implement a multi-layered approach to issue data management for optimal performance and offline capability.
+
+| Phase | Feature | Description |
+| :--- | :--- | :--- |
+| **Phase 1** | **In-Memory Cache** | Quick-win implementation: Cache fetched issues in memory for the current session. Avoid redundant API calls when navigating between issue list and details view. Invalidate cache on explicit refresh command. |
+| **Phase 2** | **Persistence Layer (JSON/SQLite)** | Add persistent storage in `~/.local/share/nvim/tickets/` directory. Options: <br/>- **JSON**: Simple file-based cache per repository (`{repo-hash}.json`) for lightweight needs<br/>- **SQLite**: Structured database for advanced querying, supporting Telescope integration and complex filters. Include metadata: last sync time, cache freshness policy (e.g., 15min TTL). |
+| **Phase 3** | **User Notes per Issue** | Optional `.tickets/notes/` folder in project root for per-issue annotations and local context. User notes are git-trackable for team collaboration. Keep separate from cache data (cache in data dir, notes in workspace). |

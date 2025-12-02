@@ -1,6 +1,7 @@
 -- lua/tickets/github.lua
 local curl = require("plenary.curl")
 local utils = require("tickets.utils")
+local cache = require("tickets.cache")
 local M = {}
 
 -- Check if gh CLI is available and authenticated
@@ -104,15 +105,37 @@ local function fetch_issues_curl(repo, callback)
 end
 
 -- Main fetch function with gh CLI support and fallback
-function M.fetch_issues(callback)
+function M.fetch_issues(callback, force_refresh)
     local repo = utils.get_current_repo()
     if not repo then
         vim.notify("Could not determine current GitHub repository. Are you in a git repo with a 'github.com' origin?", vim.log.levels.ERROR)
         return
     end
 
+    -- Check cache first (unless force_refresh is true)
+    if not force_refresh then
+        local cached_issues = cache.get_issues(repo)
+        if cached_issues then
+            vim.notify("Using cached issues (" .. #cached_issues .. " issues)", vim.log.levels.INFO)
+            if callback then
+                callback(cached_issues)
+            end
+            return
+        end
+    end
+
+    -- Wrap callback to cache the results
+    local cache_wrapper = function(issues)
+        if issues then
+            cache.set_issues(repo, issues)
+        end
+        if callback then
+            callback(issues)
+        end
+    end
+
     if is_gh_available() then
-        fetch_issues_gh(repo, callback)
+        fetch_issues_gh(repo, cache_wrapper)
     else
         local token = get_github_token()
         if token == "" then
@@ -122,8 +145,101 @@ function M.fetch_issues(callback)
             )
             return
         end
-        fetch_issues_curl(repo, callback)
+        fetch_issues_curl(repo, cache_wrapper)
     end
+end
+
+-- Fetch full issue details including comments
+-- @param repo string: "owner/repo"
+-- @param issue_number number: Issue number
+-- @param callback function: Called with (issue_with_comments) or (nil, error)
+function M.fetch_issue_details(repo, issue_number, callback, force_refresh)
+    if not is_gh_available() then
+        vim.notify("gh CLI is required for fetching issue details", vim.log.levels.ERROR)
+        return
+    end
+
+    -- Check cache first (unless force_refresh is true)
+    if not force_refresh then
+        local cached_details = cache.get_issue_details(repo, issue_number)
+        if cached_details then
+            vim.schedule(function()
+                callback(cached_details)
+            end)
+            return
+        end
+    end
+
+    local issue_url = "repos/" .. repo .. "/issues/" .. issue_number
+    local comments_url = "repos/" .. repo .. "/issues/" .. issue_number .. "/comments"
+
+    local issue_data = nil
+    local comments_data = nil
+    local issue_done = false
+    local comments_done = false
+
+    local function check_complete()
+        if issue_done and comments_done then
+            if issue_data and comments_data then
+                issue_data.comments = comments_data
+                -- Cache the result before calling the callback
+                cache.set_issue_details(repo, issue_number, issue_data)
+                vim.schedule(function()
+                    callback(issue_data)
+                end)
+            else
+                vim.schedule(function()
+                    callback(nil, "Failed to fetch issue details")
+                end)
+            end
+        end
+    end
+
+    -- Fetch issue details
+    vim.fn.jobstart({ "gh", "api", issue_url }, {
+        stdout_buffered = true,
+        on_stdout = function(_, data)
+            if data then
+                local output = table.concat(data, "\n")
+                if output and output ~= "" then
+                    local ok, result = pcall(vim.fn.json_decode, output)
+                    if ok then
+                        issue_data = result
+                    end
+                end
+            end
+        end,
+        on_exit = function(_, exit_code)
+            issue_done = true
+            if exit_code ~= 0 then
+                issue_data = nil
+            end
+            check_complete()
+        end,
+    })
+
+    -- Fetch comments
+    vim.fn.jobstart({ "gh", "api", comments_url }, {
+        stdout_buffered = true,
+        on_stdout = function(_, data)
+            if data then
+                local output = table.concat(data, "\n")
+                if output and output ~= "" then
+                    local ok, result = pcall(vim.fn.json_decode, output)
+                    if ok then
+                        comments_data = result
+                    end
+                end
+            end
+        end,
+        on_exit = function(_, exit_code)
+            comments_done = true
+            if exit_code ~= 0 then
+                comments_data = {} -- Empty array if comments fail
+            end
+            check_complete()
+        end,
+    })
 end
 
 return M
