@@ -59,7 +59,9 @@ nav:
       - Browser Integration: features/browser.md
   - Advanced: []
   - Contributing: contributing.md
-  - Roadmap: roadmap.md
+  - Roadmap:
+      - Overview: roadmap/index.md
+      - Feature Ideas: roadmap/feature_ideas.md
 
 plugins:
   - search
