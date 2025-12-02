@@ -30,10 +30,10 @@ To open your designated todo file in a floating window:
 To fetch issues from the configured repository:
 
 ```vim
-:GithubFetch
+:TicketsGithubFetch
 ```
 
-*(Note: Currently prints issues to the command line/messages area).*
+*(Note: Opens issues in a floating window. Press `q` to close.)*
 
 ## Configuration
 
