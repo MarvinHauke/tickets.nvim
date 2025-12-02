@@ -15,11 +15,20 @@ The core feature is the ability to quickly access a TODO file without leaving yo
 
 ## GitHub Integration
 
-Connects to the GitHub API to retrieve issues.
+Connects to the GitHub API to retrieve issues for your current project.
 
-*   **Command**: `:GithubFetch`
-*   **Authentication**: Uses the `GITHUB_TOKEN` environment variable if available. This is recommended to avoid rate limits and access private repositories.
-*   **Output**: currently displays issue numbers and titles in the message area.
+*   **Command**: `:TicketsGithubFetch`
+*   **Repository Detection**: Automatically detects the repository from your current git remote (`git remote get-url origin`). No configuration needed.
+*   **Authentication**:
+    1.  **gh CLI** (Preferred): Checks if you are logged in via `gh auth status`.
+    2.  **GITHUB_TOKEN**: Falls back to using `curl` with this environment variable if `gh` is unavailable.
+*   **Feedback & UI**:
+    *   Displays fetched issues in a clean floating window.
+    *   Provides system notifications (`vim.notify`) for:
+        *   Success (e.g., "5 issues fetched")
+        *   Empty results ("No issues found for this repository")
+        *   Configuration errors (e.g., missing repo, missing auth)
+        *   API/CLI errors (with specific error messages)
 
 ## User Interface
 
