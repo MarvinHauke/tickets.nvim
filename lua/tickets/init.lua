@@ -10,7 +10,7 @@ local function setup_user_commands(opts)
         ui.open_floating_file(target_file)
     end, {})
 
-    vim.api.nvim_create_user_command("GithubFetch", function()
+    vim.api.nvim_create_user_command("TicketsGithubFetch", function()
         github.fetch_issues(function(issues)
             for _, issue in ipairs(issues) do
                 print(string.format("#%d: %s", issue.number, issue.title))
