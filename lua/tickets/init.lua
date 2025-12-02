@@ -6,7 +6,7 @@ local github = require("tickets.github")
 
 local function setup_user_commands(opts)
     local target_file = opts.target_file or "todo.md"
-    vim.api.nvim_create_user_command("Td", function()
+    vim.api.nvim_create_user_command("Tickets", function()
         ui.open_floating_file(target_file)
     end, {})
 

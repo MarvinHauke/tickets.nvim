@@ -1,5 +1,6 @@
 # Compiled Lua sources
 luac.out
+*.luac
 
 # luarocks build files
 *.src.rock
@@ -12,6 +13,12 @@ luac.out
 *.ko
 *.obj
 *.elf
+
+# MCPs and CLI Agents
+.claude/
+.gemini/
+.mcp.json
+
 
 # Precompiled Headers
 *.gch
@@ -39,3 +46,95 @@ luac.out
 *.x86_64
 *.hex
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.vim/
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+Log.txt
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.envrc.local
+
+# Project specific
+*.pyc
+node_modules/
+config.local.lua
+*.bak
+*.tmp
+
+# Hammerspoon
+hs.ipc
+
+# MkDocs
+site/
+docs/_auto-generated/
