@@ -39,7 +39,7 @@ For detailed information on installation, configuration, and advanced usage, che
 *   **Context Aware**: Keeps your task list attached to your current project context.
 *   **Data Safety**: Prevents accidental closing of unsaved buffers.
 
-### 🐙 GitHub Integration
+### 🐈 GitHub Integration
 *   **Auto-Detection**: Automatically detects the repository from your git remote.
 *   **Issue Browser**: View open issues with `:TicketsGithubFetch`.
 *   **Deep Dive**: Press `<Enter>` on an issue to view the full description, metadata, and comments.
