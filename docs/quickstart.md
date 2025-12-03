@@ -44,9 +44,27 @@ To fetch issues from the **current repository**:
 
 The plugin will:
 1.  Detect the repository from your git remote (`origin`).
-2.  Fetch open issues using `gh` CLI or `curl` (fallback).
-3.  Display them in a floating window.
-4.  Notify you of the number of issues found (or if none exist).
+2.  Check cache first; if cached, display instantly.
+3.  Otherwise, fetch open issues using `gh` CLI or `curl` (fallback).
+4.  Display them in a floating window.
+5.  Notify you of the number of issues found (or if none exist).
+
+### Additional GitHub Commands
+
+```vim
+:TicketsGithubRefresh      " Force refresh from API (bypass cache)
+:TicketsCacheClear         " Clear all cached data
+:TicketsCacheClear owner/repo  " Clear cache for specific repository
+:TicketsCacheStats         " Show cache statistics
+```
+
+### Viewing Issue Details
+
+When the issues list is open:
+
+*   Press `<CR>` (Enter) on any issue to view full details including description, labels, assignees, and comments
+*   Press `q` to close the detail view
+*   Press `gx` to open the issue in your browser
 
 ## Configuration
 

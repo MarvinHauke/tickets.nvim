@@ -54,12 +54,16 @@ nav:
   - Getting Started:
       - Installation: installation.md
       - Quick Start: quickstart.md
+      - Configuration: configuration.md
   - Features:
       - Overview: features/overview.md
       - Browser Integration: features/browser.md
-  - Advanced: []
+  - Advanced:
+      - Architecture: architecture.md
   - Contributing: contributing.md
-  - Roadmap: roadmap.md
+  - Roadmap:
+      - Overview: roadmap/index.md
+      - Feature Ideas: roadmap/feature_ideas.md
 
 plugins:
   - search

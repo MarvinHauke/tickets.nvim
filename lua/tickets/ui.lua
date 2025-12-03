@@ -1,26 +1,25 @@
+-- Public UI module - thin coordinator for UI components
 local M = {}
 
 local utils = require("tickets.utils")
+local config = require("tickets.ui.config")
+local issue_list = require("tickets.ui.issue_list")
 
-local function win_config()
-    local width = math.min(math.floor(vim.o.columns * 0.8), 64)
-    local height = math.floor(vim.o.lines * 0.8)
-
-    return {
-        relative = "editor",
-        width = width,
-        height = height,
-        col = 1,
-        row = 1,
-        border = "rounded",
-    }
-end
-
+-- Open a floating window for editing a file (e.g., todo.md)
+-- @param target_file string: Path to file to open
 function M.open_floating_file(target_file)
     local expanded_path = utils.expand_path(target_file)
 
+    -- Create the file if it doesn't exist
     if vim.fn.filereadable(expanded_path) == 0 then
-        vim.notify("Todo File does not exist at directory: " .. expanded_path, vim.log.levels.ERROR)
+        local file = io.open(expanded_path, "w")
+        if file then
+            file:close()
+            vim.notify("Created new todo file at: " .. expanded_path, vim.log.levels.INFO)
+        else
+            vim.notify("Failed to create todo file at: " .. expanded_path, vim.log.levels.ERROR)
+            return
+        end
     end
 
     local buf = vim.fn.bufnr(expanded_path, true)
@@ -31,33 +30,19 @@ function M.open_floating_file(target_file)
 
     vim.bo[buf].swapfile = false
 
-    local win = vim.api.nvim_open_win(buf, true, win_config())
+    local win = vim.api.nvim_open_win(buf, true, config.create_file_window_config())
 end
 
--- New function to open a floating window with the GitHub issues
+-- Open a floating window with GitHub issues
+-- @param issues table: Array of issue objects from GitHub API
 function M.open_issues_window(issues)
-    local buf = vim.api.nvim_create_buf(false, true) -- scratch buffer
-    local lines = {}
-
-    for _, issue in ipairs(issues) do
-        table.insert(lines, string.format("#%d %s", issue.number, issue.title))
+    local repo = utils.get_current_repo()
+    if not repo then
+        vim.notify("Could not determine repository", vim.log.levels.ERROR)
+        return
     end
 
-    if #lines == 0 then
-        table.insert(lines, "No issues found.")
-    end
-
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-    vim.bo[buf].modifiable = false
-    vim.bo[buf].bufhidden = "wipe"
-    vim.bo[buf].filetype = "markdown"
-
-    local win = vim.api.nvim_open_win(buf, true, win_config())
-
-    -- Optional: map `q` to close window
-    vim.keymap.set("n", "q", function()
-        vim.api.nvim_win_close(win, true)
-    end, { buffer = buf, silent = true })
+    issue_list.open_issues_window(issues, repo)
 end
 
 return M

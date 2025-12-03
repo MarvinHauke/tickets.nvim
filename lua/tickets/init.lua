@@ -1,37 +1,29 @@
+-- Main plugin entry point
 local M = {}
 
-local ui = require("tickets.ui")
-local utils = require("tickets.utils")
-local github = require("tickets.github")
+local config = require("tickets.config")
+local commands = require("tickets.commands")
 
-local function setup_user_commands(opts)
-    local target_file = opts.target_file or "todo.md"
-    vim.api.nvim_create_user_command("Tickets", function()
-        ui.open_floating_file(target_file)
-    end, {})
+-- Setup the plugin
+-- @param opts table: Configuration options (see config.lua for defaults)
+function M.setup(opts)
+    opts = opts or {}
 
-    vim.api.nvim_create_user_command("TicketsGithubFetch", function()
-        github.fetch_issues(function(issues)
-            ui.open_issues_window(issues)
-        end)
-    end, {})
+    -- Validate and merge with defaults
+    local validated_config, errors = config.validate(opts)
 
-    local buf = utils.get_or_create_buf(target_file)
-    vim.api.nvim_buf_set_keymap(buf, "n", "q", "", {
-        noremap = true,
-        silent = true,
-        callback = function()
-            if vim.api.nvim_get_option_value("modified", { buf = buf }) then
-                vim.notify("save your changes pls", vim.log.levels.WARN)
-            else
-                vim.api.nvim_win_close(0, true)
-            end
-        end,
-    })
-end
+    -- Report validation errors
+    if #errors > 0 then
+        local error_msg = "Tickets.nvim configuration errors:\n" .. table.concat(errors, "\n")
+        vim.notify(error_msg, vim.log.levels.ERROR)
+        return
+    end
 
-M.setup = function(opts)
-    setup_user_commands(opts)
+    -- Store validated config globally for other modules
+    M.config = validated_config
+
+    -- Register all commands
+    commands.setup(validated_config)
 end
 
 return M
