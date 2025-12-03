@@ -1,0 +1,1487 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pull Issues from Github">
+      
+      
+        <meta name="author" content="MarvinHauke">
+      
+      
+        <link rel="canonical" href="https://github.com/MarvinHauke/Tickets.nvim/roadmap/feature_ideas/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Feature Ideas - Tickets.nvim</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ticketsnvim-feature-ideas-comprehensive-roadmap" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Tickets.nvim" class="md-header__button md-logo" aria-label="Tickets.nvim" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tickets.nvim
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Feature Ideas
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/MarvinHauke/tickets.nvim" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MarvinHauke/tickets.nvim
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../installation/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../features/overview/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../architecture/" class="md-tabs__link">
+          
+  
+  
+  Advanced
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Roadmap
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Tickets.nvim" class="md-nav__button md-logo" aria-label="Tickets.nvim" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Tickets.nvim
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/MarvinHauke/tickets.nvim" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MarvinHauke/tickets.nvim
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/browser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Browser Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Roadmap
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature Ideas
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature Ideas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-functionality-extensions-deeper-interaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Functionality Extensions (Deeper Interaction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-integration-git-vcs-harmony" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow Integration (Git &amp; VCS Harmony)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workflow Integration (Git &amp; VCS Harmony)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#third-party-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Third-Party Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-provider-support-enterprise-open-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Provider Support (Enterprise &amp; Open Source)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#productivity-features-efficiency-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Productivity Features (Efficiency &amp; Context)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-features-project-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Features &amp; Project Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-persistence-caching-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Persistence &amp; Caching Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-functionality-extensions-deeper-interaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Functionality Extensions (Deeper Interaction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-integration-git-vcs-harmony" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow Integration (Git &amp; VCS Harmony)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workflow Integration (Git &amp; VCS Harmony)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#third-party-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Third-Party Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-provider-support-enterprise-open-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Provider Support (Enterprise &amp; Open Source)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#productivity-features-efficiency-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Productivity Features (Efficiency &amp; Context)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-features-project-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Features &amp; Project Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-persistence-caching-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Persistence &amp; Caching Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ticketsnvim-feature-ideas-comprehensive-roadmap">🚀 Tickets.nvim Feature Ideas &amp; Comprehensive Roadmap<a class="headerlink" href="#ticketsnvim-feature-ideas-comprehensive-roadmap" title="Permanent link">&para;</a></h1>
+<p>This document outlines planned features, refined concepts, and expanded ideas for the future development of <strong>Tickets.nvim</strong>, aiming to create a powerful, integrated issue-management tool within Neovim.</p>
+<h2 id="core-functionality-extensions-deeper-interaction">Core Functionality Extensions (Deeper Interaction)<a class="headerlink" href="#core-functionality-extensions-deeper-interaction" title="Permanent link">&para;</a></h2>
+<p>Enhance the basic interaction with issues directly within Neovim.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Status</th>
+<th style="text-align: left;">Refined Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>View Issue Details &amp; Comments</strong></td>
+<td style="text-align: left;">✅ DONE</td>
+<td style="text-align: left;">Press <code>Enter</code> to view the full body, labels, assignees, and the <strong>full comment history</strong> in a split pane. ~~Add the ability to <strong>post new comments</strong> directly from this view.~~ (commenting not yet implemented)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Open in Browser</strong></td>
+<td style="text-align: left;">✅ DONE</td>
+<td style="text-align: left;">Press <code>gx</code> on an issue line to open the corresponding provider page in the default browser.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Create Issue (with Metadata)</strong></td>
+<td style="text-align: left;">✅ DONE</td>
+<td style="text-align: left;"><code>:TicketsCreate</code> opens frontmatter-based template to specify <strong>title, description, labels, and assignees</strong>. Submit with <code>&lt;leader&gt;s</code> or <code>&lt;CR&gt;&lt;CR&gt;</code>. Uses scratch buffer to avoid file write complications.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Edit Issue Metadata</strong></td>
+<td style="text-align: left;">📝 Planned</td>
+<td style="text-align: left;">New commands/keymaps to <strong>edit</strong> the issue's <strong>title, body, labels, assignees, and milestone</strong> from the detailed view.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Create Issue Refinements</strong></td>
+<td style="text-align: left;">💡 Ideas</td>
+<td style="text-align: left;"><ul><li>Add milestone support in frontmatter</li><li>Template persistence/customization per repo</li><li>Issue templates from <code>.github/ISSUE_TEMPLATE/</code></li><li>Preview rendering before submission</li><li>Draft issues (save locally before submitting)</li></ul></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Close/Reopen Issue</strong></td>
+<td style="text-align: left;">📝 Planned</td>
+<td style="text-align: left;">Toggle issue state (open/closed) directly from the list view.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Interactive Filtering</strong></td>
+<td style="text-align: left;">📝 Planned</td>
+<td style="text-align: left;">Support query arguments for fetching (e.g., <code>:TicketsFetch label:bug assignee:@me</code>). <strong>Implement a dynamic/interactive filter UI</strong> for on-the-fly filtering and allow <strong>saving favorite filters</strong>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Post Comments</strong></td>
+<td style="text-align: left;">📝 Planned</td>
+<td style="text-align: left;">Add the ability to <strong>post new comments</strong> directly from the detail view.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="workflow-integration-git-vcs-harmony">Workflow Integration (Git &amp; VCS Harmony)<a class="headerlink" href="#workflow-integration-git-vcs-harmony" title="Permanent link">&para;</a></h2>
+<p>Seamlessly integrate issue management with your git workflow.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Refined Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Branch from Issue (Smart)</strong></td>
+<td style="text-align: left;">Keymap (e.g., <code>&lt;leader&gt;tb</code>) to create a branch named <code>feature/#123-issue-title</code> from the selected issue. Automatically <strong>switch to the new branch</strong> and optionally draft a placeholder first commit message with the issue reference.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Commit Message Helper (Smart)</strong></td>
+<td style="text-align: left;">Autocomplete issue references (e.g., <code>#123</code>) within commit messages. Expand to suggest <strong>closing keywords</strong> (<code>fixes #123</code>) and suggest <strong>conventional commit types</strong> (<code>feat:</code>, <code>fix:</code>) based on issue labels.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Link Issue in Code (Clickable)</strong></td>
+<td style="text-align: left;">Automatically highlight and detect issue references (e.g., <code>TODO: #123</code>, <code>Fixes: #456</code>) in code comments and make them <strong>clickable</strong> via a keymap (e.g., <code>&lt;CR&gt;</code> or <code>gO</code>) to open the issue details view.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>PR Linking</strong></td>
+<td style="text-align: left;">Display linked Pull Requests alongside the issue in the detailed view, including the <strong>current status</strong> (e.g., <code>Open</code>, <code>Merged</code>, <code>Draft</code>, <code>Review Required</code>) and all relevant checks.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="third-party-integration">Third-Party Integration<a class="headerlink" href="#third-party-integration" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Refined Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><code>todo-comments.nvim</code> Integration</strong></td>
+<td style="text-align: left;">Leverage <code>todo-comments.nvim</code> for enhanced workflow: <br/> - <strong>Issue Conversion</strong>: Convert <code>TODO</code> comments found by <code>todo-comments.nvim</code> directly into GitHub issues via <code>Tickets.nvim</code>. <br/> - <strong>Enriched Highlighting</strong>: Display issue details (title, status) as virtual text next to <code>TODO: #&lt;issue_number&gt;</code> comments. <br/> - <strong>Unified Dashboard</strong>: Create a view combining local <code>TODO</code>s from <code>todo-comments.nvim</code> and remote issues from <code>Tickets.nvim</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="multi-provider-support-enterprise-open-source">Multi-Provider Support (Enterprise &amp; Open Source)<a class="headerlink" href="#multi-provider-support-enterprise-open-source" title="Permanent link">&para;</a></h2>
+<p>Expand support beyond GitHub to other platforms.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Provider</th>
+<th style="text-align: left;">Status</th>
+<th style="text-align: left;">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>GitHub</strong></td>
+<td style="text-align: left;">✅ Implemented</td>
+<td style="text-align: left;">Core functionality available.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>GitLab</strong></td>
+<td style="text-align: left;">📝 Planned</td>
+<td style="text-align: left;">Implementation via REST API.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Jira</strong></td>
+<td style="text-align: left;">📝 Planned</td>
+<td style="text-align: left;">High priority for enterprise users, supporting Jira Query Language (JQL).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Linear</strong></td>
+<td style="text-align: left;">📝 Planned</td>
+<td style="text-align: left;">For modern, high-speed issue tracking workflows.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Forgejo/Gitea</strong></td>
+<td style="text-align: left;">📝 Planned</td>
+<td style="text-align: left;">Support for self-hosted instances.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Azure DevOps/TFS</strong></td>
+<td style="text-align: left;">📝 Planned</td>
+<td style="text-align: left;">Critical for Microsoft-centric enterprise environments.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="productivity-features-efficiency-context">Productivity Features (Efficiency &amp; Context)<a class="headerlink" href="#productivity-features-efficiency-context" title="Permanent link">&para;</a></h2>
+<p>Tools to speed up navigation and context management.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Refined Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Telescope Integration</strong></td>
+<td style="text-align: left;">New picker <code>:Telescope tickets</code> for fuzzy searching. Allow searching across <strong>multiple configured repositories</strong> and searching through <strong>cached</strong> issues.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Statusline Component &amp; Timer Control</strong></td>
+<td style="text-align: left;">Display the currently active/working issue in statuslines (like <code>lualine</code>). Allow <strong>pausing/resuming</strong> the issue timer via a command or statusline click.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Issue Timer (External Integration)</strong></td>
+<td style="text-align: left;">Simple time tracking per issue directly in the editor. <strong>Integrate with external time tracking APIs</strong> (e.g., Toggl Track) for professional use.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Offline Cache (Smart Sync)</strong></td>
+<td style="text-align: left;">Cache fetched issues locally for instant access and offline viewing. Implement <strong>smart synchronization</strong> (only fetch updates) and allow <strong>pre-fetching</strong> issues for specific repositories/queries.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Notifications</strong></td>
+<td style="text-align: left;">Utilize Neovim's <code>vim.notify</code> for <strong>pop-up notifications</strong> for new comments or mentions on tracked issues. Allow configuring notification filters and mute options.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Bulk Actions</strong></td>
+<td style="text-align: left;">Functionality to select multiple issues in the list view and apply a common action to all of them at once (e.g., change status, apply label).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="advanced-features-project-management">Advanced Features &amp; Project Management<a class="headerlink" href="#advanced-features-project-management" title="Permanent link">&para;</a></h2>
+<p>Deepen the connection between code and issues, adding organizational tools.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Kanban/Board View</strong></td>
+<td style="text-align: left;">A visual representation of issues organized by status (e.g., To Do, In Progress, Done) similar to GitHub Projects or Jira Boards, rendered using a dedicated Neovim buffer.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Configuration per Project</strong></td>
+<td style="text-align: left;">Allow a local configuration file (e.g., <code>.tickets.lua</code>) in the project root to override global settings (like default repository, preferred provider) for seamless multi-repo work.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Blame to Issue</strong></td>
+<td style="text-align: left;">Enhance <code>git blame</code> functionality to show the issue linked to a specific line of code by parsing issue references from commit messages.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Issue to Code (Reverse Lookup)</strong></td>
+<td style="text-align: left;">Show a list of files and lines where a specific issue is referenced (e.g., in a <code>TODO: #123</code> comment), displayed in a <strong>quickfix/location list</strong>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Custom Status Mapping</strong></td>
+<td style="text-align: left;">Allow users to map provider-specific statuses (e.g., "In Review," "Awaiting Feedback") to a simpler set of internal statuses for a unified experience across different providers.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="data-persistence-caching-strategy">Data Persistence &amp; Caching Strategy<a class="headerlink" href="#data-persistence-caching-strategy" title="Permanent link">&para;</a></h2>
+<p>Implement a multi-layered approach to issue data management for optimal performance and offline capability.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Phase</th>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Status</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Phase 1</strong></td>
+<td style="text-align: left;"><strong>In-Memory Cache</strong></td>
+<td style="text-align: left;">✅ DONE</td>
+<td style="text-align: left;">Quick-win implementation: Cache fetched issues in memory for the current session. Avoid redundant API calls when navigating between issue list and details view. Invalidate cache on explicit refresh command.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 2</strong></td>
+<td style="text-align: left;"><strong>Persistence Layer (JSON)</strong></td>
+<td style="text-align: left;">✅ DONE</td>
+<td style="text-align: left;">Persistent storage in <code>~/.local/share/nvim/tickets/cache/</code> directory using JSON files. One file per repository (<code>owner_repo.json</code>) for lightweight needs. Includes metadata: last sync time. Auto-loads from disk on access.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 2b</strong></td>
+<td style="text-align: left;"><strong>Persistence Layer (SQLite)</strong></td>
+<td style="text-align: left;">📝 Planned</td>
+<td style="text-align: left;">Optional: Structured database for advanced querying, supporting Telescope integration and complex filters. Would enable cache freshness policy (e.g., 15min TTL) and multi-repo queries.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 3</strong></td>
+<td style="text-align: left;"><strong>User Notes per Issue</strong></td>
+<td style="text-align: left;">📝 Planned</td>
+<td style="text-align: left;">Optional <code>.tickets/notes/</code> folder in project root for per-issue annotations and local context. User notes are git-trackable for team collaboration. Keep separate from cache data (cache in data dir, notes in workspace).</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
