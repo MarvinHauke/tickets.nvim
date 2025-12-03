@@ -12,7 +12,12 @@ local function is_gh_available()
     end
     local result = handle:read("*a")
     handle:close()
-    return result:match("Logged in") ~= nil
+    
+    -- Check if logged in AND that there's no invalid token error
+    local has_login = result:match("Logged in") ~= nil
+    local has_invalid_token = result:match("invalid") ~= nil or result:match("Failed to log in") ~= nil
+    
+    return has_login and not has_invalid_token
 end
 
 -- Get GitHub token from env (optional, for rate limits & private repos)
@@ -26,7 +31,9 @@ local function fetch_issues_gh(repo, callback)
 
     local stderr_data = {}
 
-    vim.fn.jobstart({ "gh", "api", api_url }, {
+    -- Use env -u to explicitly unset GITHUB_TOKEN to force gh CLI to use keyring authentication
+    -- This prevents issues when GITHUB_TOKEN is set but invalid
+    vim.fn.jobstart({ "env", "-u", "GITHUB_TOKEN", "gh", "api", api_url }, {
         stdout_buffered = true,
         stderr_buffered = true,
         on_stdout = function(_, data)
@@ -196,7 +203,7 @@ function M.fetch_issue_details(repo, issue_number, callback, force_refresh)
     end
 
     -- Fetch issue details
-    vim.fn.jobstart({ "gh", "api", issue_url }, {
+    vim.fn.jobstart({ "env", "-u", "GITHUB_TOKEN", "gh", "api", issue_url }, {
         stdout_buffered = true,
         on_stdout = function(_, data)
             if data then
@@ -219,7 +226,7 @@ function M.fetch_issue_details(repo, issue_number, callback, force_refresh)
     })
 
     -- Fetch comments
-    vim.fn.jobstart({ "gh", "api", comments_url }, {
+    vim.fn.jobstart({ "env", "-u", "GITHUB_TOKEN", "gh", "api", comments_url }, {
         stdout_buffered = true,
         on_stdout = function(_, data)
             if data then
