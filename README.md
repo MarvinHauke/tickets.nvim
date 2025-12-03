@@ -35,16 +35,18 @@ For detailed information on installation, configuration, and advanced usage, che
 **tickets.nvim** is designed to keep you in the flow by integrating task management and issue tracking directly into your editor.
 
 ### 📝 Local Task Management
-*   **Instant Access**: Open your project's `TODO.md` in a centered floating window with `:Tickets`.
-*   **Context Aware**: Keeps your task list attached to your current project context.
-*   **Data Safety**: Prevents accidental closing of unsaved buffers.
 
-### 🐈 GitHub Integration
-*   **Auto-Detection**: Automatically detects the repository from your git remote.
-*   **Issue Browser**: View open issues with `:TicketsGithubFetch`.
-*   **Deep Dive**: Press `<Enter>` on an issue to view the full description, metadata, and comments.
-*   **Performance**: Smart in-memory caching for instant subsequent loads.
-*   **Flexible Auth**: Works seamlessly with the `gh` CLI or `GITHUB_TOKEN`.
+- **Instant Access**: Open your project's `TODO.md` in a centered floating window with `:Tickets`.
+- **Context Aware**: Keeps your task list attached to your current project context.
+- **Data Safety**: Prevents accidental closing of unsaved buffers.
+
+### 😺 GitHub Integration
+
+- **Auto-Detection**: Automatically detects the repository from your git remote.
+- **Issue Browser**: View open issues with `:TicketsGithubFetch`.
+- **Deep Dive**: Press `<Enter>` on an issue to view the full description, metadata, and comments.
+- **Performance**: Smart in-memory caching for instant subsequent loads.
+- **Flexible Auth**: Works seamlessly with the `gh` CLI or `GITHUB_TOKEN`.
 
 ## 📦 Installation
 
@@ -62,13 +64,13 @@ Install with your favorite package manager.
 
 ## 🚀 Usage
 
-| Command | Description |
-|---------|-------------|
-| `:Tickets` | Open or create the local `TODO.md` file in a floating window. |
-| `:TicketsGithubFetch` | Fetch and list issues for the current repository (uses cache if available). |
-| `:TicketsGithubRefresh` | Force fetch issues from GitHub, updating the cache. |
-| `:TicketsCacheClear` | Clear the issue cache for the current or specified repository. |
-| `:TicketsCacheStats` | Display statistics about the current issue cache. |
+| Command                 | Description                                                                 |
+| ----------------------- | --------------------------------------------------------------------------- |
+| `:Tickets`              | Open or create the local `TODO.md` file in a floating window.               |
+| `:TicketsGithubFetch`   | Fetch and list issues for the current repository (uses cache if available). |
+| `:TicketsGithubRefresh` | Force fetch issues from GitHub, updating the cache.                         |
+| `:TicketsCacheClear`    | Clear the issue cache for the current or specified repository.              |
+| `:TicketsCacheStats`    | Display statistics about the current issue cache.                           |
 
 ## ⚙️ Configuration
 
