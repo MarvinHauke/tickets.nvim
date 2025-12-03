@@ -108,18 +108,32 @@ lua/tickets/
 #### `create.lua` (200+ lines)
 **Purpose:** Issue creation functionality
 
-- Opens markdown template buffer for new issues
-- Parses title and body from structured template
+- Opens markdown template buffer with frontmatter for metadata
+- Parses title, body, labels, and assignees from structured template
 - Submits via `gh issue create` command
 - Auto-invalidates cache after creation
 - Optionally opens created issue in browser
 
+**Template Format:**
+```markdown
+---
+labels: [bug, enhancement]
+assignees: [username]
+---
+
+# Issue Title
+
+## Description
+...
+```
+
 **Workflow:**
-1. `:TicketsCreate` opens template buffer
-2. User fills in title and description
-3. `:w` submits the issue
+1. `:TicketsCreate` opens template buffer (scratch buffer)
+2. User fills in frontmatter, title, and description
+3. `<leader>s` or `<CR><CR>` submits the issue
 4. Success notification with issue URL
 5. Cache invalidated to show new issue
+6. Issue optionally opens in browser
 
 #### `utils.lua` (51 lines)
 **Purpose:** Helper functions

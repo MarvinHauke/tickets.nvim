@@ -7,6 +7,11 @@ local notify = require("tickets.notifications")
 -- Template for new issue buffer
 local function get_issue_template()
     return {
+        "---",
+        "labels: []",
+        "assignees: []",
+        "---",
+        "",
         "# Issue Title",
         "",
         "## Description",
@@ -22,23 +27,53 @@ local function get_issue_template()
         "<!-- Instructions:",
         "  1. Replace 'Issue Title' above with your issue title",
         "  2. Write your description in the Description section",
-        "  3. Save with :w or :wq to create the issue",
-        "  4. Close without saving (:q!) to cancel",
+        "  3. (Optional) Add labels in frontmatter: labels: [bug, enhancement]",
+        "  4. (Optional) Add assignees in frontmatter: assignees: [username]",
+        "  5. Save with :w or :wq to create the issue",
+        "  6. Close without saving (:q!) to cancel",
         "-->",
     }
 end
 
 -- Parse the issue from the buffer content
 -- @param lines table: Array of buffer lines
--- @return table|nil: { title, body } or nil if invalid
+-- @return table|nil: { title, body, labels, assignees } or nil if invalid
 local function parse_issue_from_buffer(lines)
     local title = nil
     local body_lines = {}
+    local labels = {}
+    local assignees = {}
+    local in_frontmatter = false
     local in_body = false
 
     for i, line in ipairs(lines) do
+        -- Detect frontmatter
+        if line:match("^%-%-%-$") then
+            in_frontmatter = not in_frontmatter
+        -- Parse frontmatter
+        elseif in_frontmatter then
+            -- Parse labels: labels: [bug, enhancement]
+            local labels_str = line:match("^labels:%s*%[(.*)%]")
+            if labels_str then
+                for label in labels_str:gmatch("[^,]+") do
+                    local trimmed = label:match("^%s*(.-)%s*$")
+                    if trimmed ~= "" then
+                        table.insert(labels, trimmed)
+                    end
+                end
+            end
+            -- Parse assignees: assignees: [username1, username2]
+            local assignees_str = line:match("^assignees:%s*%[(.*)%]")
+            if assignees_str then
+                for assignee in assignees_str:gmatch("[^,]+") do
+                    local trimmed = assignee:match("^%s*(.-)%s*$")
+                    if trimmed ~= "" then
+                        table.insert(assignees, trimmed)
+                    end
+                end
+            end
         -- Skip comments
-        if not line:match("^<!%-%-") then
+        elseif not line:match("^<!%-%-") then
             -- Look for title (first # heading)
             if not title and line:match("^#%s+(.+)") then
                 title = line:match("^#%s+(.+)")
@@ -76,12 +111,17 @@ local function parse_issue_from_buffer(lines)
         return nil, "Issue description is required"
     end
 
-    return { title = title, body = body }
+    return {
+        title = title,
+        body = body,
+        labels = labels,
+        assignees = assignees,
+    }
 end
 
 -- Create issue via gh CLI
 -- @param repo string: Repository in "owner/repo" format
--- @param issue table: { title, body }
+-- @param issue table: { title, body, labels, assignees }
 -- @param callback function: Called with (issue_url, error)
 local function create_issue_gh(repo, issue, callback)
     local cmd = {
@@ -98,6 +138,22 @@ local function create_issue_gh(repo, issue, callback)
         "--body",
         issue.body,
     }
+
+    -- Add labels if provided
+    if issue.labels and #issue.labels > 0 then
+        for _, label in ipairs(issue.labels) do
+            table.insert(cmd, "--label")
+            table.insert(cmd, label)
+        end
+    end
+
+    -- Add assignees if provided
+    if issue.assignees and #issue.assignees > 0 then
+        for _, assignee in ipairs(issue.assignees) do
+            table.insert(cmd, "--assignee")
+            table.insert(cmd, assignee)
+        end
+    end
 
     local stdout_data = {}
     local stderr_data = {}
@@ -154,15 +210,16 @@ function M.open_create_buffer()
     -- Open in current window
     vim.api.nvim_set_current_buf(buf)
 
-    -- Set up autocmd to submit on save
-    vim.api.nvim_create_autocmd("BufWriteCmd", {
-        buffer = buf,
-        callback = function()
-            M.submit_issue(buf)
-        end,
-    })
+    -- Add keymaps for submission
+    vim.keymap.set("n", "<leader>s", function()
+        M.submit_issue(buf)
+    end, { buffer = buf, desc = "Submit issue" })
 
-    vim.notify("Create new issue for " .. repo .. " (save to submit, :q! to cancel)", vim.log.levels.INFO)
+    vim.keymap.set("n", "<CR><CR>", function()
+        M.submit_issue(buf)
+    end, { buffer = buf, desc = "Submit issue (press Enter twice)" })
+
+    vim.notify("Create new issue for " .. repo .. " (<leader>s or <CR><CR> to submit, :q to cancel)", vim.log.levels.INFO)
 end
 
 -- Submit the issue from the create buffer
