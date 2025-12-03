@@ -12,11 +12,11 @@ local function is_gh_available()
     end
     local result = handle:read("*a")
     handle:close()
-    
+
     -- Check if logged in AND that there's no invalid token error
     local has_login = result:match("Logged in") ~= nil
     local has_invalid_token = result:match("invalid") ~= nil or result:match("Failed to log in") ~= nil
-    
+
     return has_login and not has_invalid_token
 end
 
@@ -146,10 +146,7 @@ function M.fetch_issues(callback, force_refresh)
     else
         local token = get_github_token()
         if token == "" then
-            vim.notify(
-                "Neither gh CLI nor GITHUB_TOKEN available. Run 'gh auth login' or set GITHUB_TOKEN",
-                vim.log.levels.WARN
-            )
+            vim.notify("Neither gh CLI nor GITHUB_TOKEN available. Run 'gh auth login' or set GITHUB_TOKEN", vim.log.levels.WARN)
             return
         end
         fetch_issues_curl(repo, cache_wrapper)

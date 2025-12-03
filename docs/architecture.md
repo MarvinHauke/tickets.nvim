@@ -10,8 +10,10 @@ lua/tickets/
 ├── config.lua            Configuration validation
 ├── commands.lua          User command registration
 ├── notifications.lua     Centralized messaging
-├── cache.lua             In-memory caching
+├── cache.lua             In-memory + persistent caching
+├── persistence.lua       Disk cache management (JSON)
 ├── github.lua            GitHub API integration
+├── create.lua            Issue creation functionality
 ├── utils.lua             Utility functions
 ├── ui.lua                Public UI API
 └── ui/
@@ -57,11 +59,13 @@ lua/tickets/
 
 ### Data Modules
 
-#### `cache.lua` (110 lines)
-**Purpose:** In-memory caching
+#### `cache.lua` (150+ lines)
+**Purpose:** In-memory + persistent caching
 
-- Caches issue lists per repository
+- Caches issue lists per repository (in-memory and on disk)
 - Caches detailed issue data
+- Auto-loads from disk on first access
+- Auto-saves to disk on updates
 - Provides cache statistics
 - Supports cache invalidation
 
@@ -78,6 +82,15 @@ lua/tickets/
 }
 ```
 
+#### `persistence.lua` (180+ lines)
+**Purpose:** Disk cache management
+
+- Saves/loads cache to/from `~/.local/share/nvim/tickets/cache/`
+- One JSON file per repository (`owner_repo.json`)
+- Includes metadata (last_sync timestamp)
+- Safe file operations with error handling
+- Statistics and listing functions
+
 #### `github.lua` (252 lines)
 **Purpose:** GitHub API integration
 
@@ -91,6 +104,22 @@ lua/tickets/
 - Forces keyring auth when GITHUB_TOKEN is invalid
 - Caches all responses
 - Async callbacks with vim.schedule
+
+#### `create.lua` (200+ lines)
+**Purpose:** Issue creation functionality
+
+- Opens markdown template buffer for new issues
+- Parses title and body from structured template
+- Submits via `gh issue create` command
+- Auto-invalidates cache after creation
+- Optionally opens created issue in browser
+
+**Workflow:**
+1. `:TicketsCreate` opens template buffer
+2. User fills in title and description
+3. `:w` submits the issue
+4. Success notification with issue URL
+5. Cache invalidated to show new issue
 
 #### `utils.lua` (51 lines)
 **Purpose:** Helper functions

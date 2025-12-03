@@ -9,7 +9,7 @@ M.LAYOUT = {
     total_height_ratio = 0.8,
 
     -- Split ratios for list and detail views
-    list_width_ratio = 0.35,  -- List takes 35% of total width
+    list_width_ratio = 0.35, -- List takes 35% of total width
     detail_width_ratio = 0.65, -- Detail takes 65% of total width
 
     -- Spacing between windows

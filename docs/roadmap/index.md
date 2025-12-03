@@ -6,14 +6,18 @@ This document tracks the high-level goals and current progress of Tickets.nvim. 
 - [x] **Dynamic Repository**: Automatically detects the current git repository for fetching issues.
 - [x] **Issue UI**: Issues are displayed in a clean floating window.
 - [x] **Authentication**: Support for both `gh` CLI and `GITHUB_TOKEN`.
+- [x] **Issue Details**: Pressing `Enter` on an issue in the list shows the full description in a split pane.
+- [x] **Browser Open**: `gx` keybinding opens the selected issue in the browser.
+- [x] **Creating Issues**: `:TicketsCreate` command to draft and submit new issues directly from Neovim.
+- [x] **Persistent Cache**: Issues and details are cached to disk for offline access and instant loading.
+- [x] **Background Prefetching**: Issue details are prefetched in the background for smooth navigation.
 
 ## In Progress 🚧
-- [ ] **Issue Details**: Pressing `Enter` on an issue in the list should show the full description.
+- [ ] **Cross-platform Browser Support**: Currently uses `open` (macOS only), needs Linux/Windows support.
 
 ## Planned (High Priority) 📅
-- [ ] **Browser Open**: Add a keybinding (e.g., `gx`) to open the selected issue in the browser.
-- [ ] **Creating Issues**: Command to draft and submit a new issue directly from Neovim.
 - [ ] **Filtering**: Support fetching issues with specific filters (labels, assignee).
+- [ ] **Edit Issue Metadata**: Edit title, body, labels, and assignees from within Neovim.
 
 ## Future Scope 🔮
 - [ ] **Multi-Provider Support**: GitLab, Jira, Linear integration.

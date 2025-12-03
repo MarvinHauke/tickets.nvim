@@ -22,7 +22,7 @@ function M.close_detail_preview(list_buf)
             vim.api.nvim_buf_delete(detail_info.buf, { force = true })
         end
         detail_windows[list_buf] = nil
-        last_viewed_issue[list_buf] = nil  -- Clear tracking
+        last_viewed_issue[list_buf] = nil -- Clear tracking
     end
 end
 
@@ -71,7 +71,7 @@ function M.update_detail_preview(list_buf, issue, repo)
 
             -- Check if user has moved to a different issue while we were loading
             if last_viewed_issue[list_buf] ~= issue.number then
-                return  -- Stale request, ignore
+                return -- Stale request, ignore
             end
 
             if err or not detailed_issue then

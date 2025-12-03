@@ -45,4 +45,26 @@ function M.open_issues_window(issues)
     issue_list.open_issues_window(issues, repo)
 end
 
+-- Open a loading window immediately (before fetching data)
+-- @return number, number, string: Buffer, window handles and repo name
+function M.open_loading_window()
+    local repo = utils.get_current_repo()
+    if not repo then
+        vim.notify("Could not determine repository", vim.log.levels.ERROR)
+        return nil, nil, nil
+    end
+
+    local buf, win = issue_list.open_loading_window(repo)
+    return buf, win, repo
+end
+
+-- Update a loading window with fetched issues
+-- @param buf number: Buffer handle from open_loading_window
+-- @param win number: Window handle from open_loading_window
+-- @param issues table: Array of issue objects from GitHub API
+-- @param repo string: Repository in "owner/repo" format
+function M.update_issues_window(buf, win, issues, repo)
+    issue_list.update_issues_window(buf, win, issues, repo)
+end
+
 return M

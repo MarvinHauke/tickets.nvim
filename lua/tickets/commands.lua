@@ -6,6 +6,7 @@ local utils = require("tickets.utils")
 local github = require("tickets.github")
 local cache = require("tickets.cache")
 local notify = require("tickets.notifications")
+local create = require("tickets.create")
 
 -- Register all user commands
 -- @param opts table: Configuration options { target_file = "todo.md" }
@@ -17,25 +18,43 @@ function M.setup(opts)
     vim.api.nvim_create_user_command("Tickets", function()
         ui.open_floating_file(target_file)
     end, {
-        desc = "Open todo file in floating window"
+        desc = "Open todo file in floating window",
     })
 
     -- Fetch GitHub issues (uses cache)
     vim.api.nvim_create_user_command("TicketsGithubFetch", function()
+        -- Open loading window immediately for instant feedback
+        local buf, win, repo = ui.open_loading_window()
+        if not buf then
+            return -- Error already notified
+        end
+
+        notify.fetching_issues()
+
         github.fetch_issues(function(issues)
-            ui.open_issues_window(issues)
+            -- Update the loading window with fetched issues
+            ui.update_issues_window(buf, win, issues, repo)
         end)
     end, {
-        desc = "Fetch GitHub issues (uses cache if available)"
+        desc = "Fetch GitHub issues (uses cache if available)",
     })
 
     -- Fetch GitHub issues (bypass cache)
     vim.api.nvim_create_user_command("TicketsGithubRefresh", function()
+        -- Open loading window immediately for instant feedback
+        local buf, win, repo = ui.open_loading_window()
+        if not buf then
+            return -- Error already notified
+        end
+
+        notify.fetching_issues()
+
         github.fetch_issues(function(issues)
-            ui.open_issues_window(issues)
+            -- Update the loading window with fetched issues
+            ui.update_issues_window(buf, win, issues, repo)
         end, true) -- force_refresh = true
     end, {
-        desc = "Fetch GitHub issues, bypassing cache"
+        desc = "Fetch GitHub issues, bypassing cache",
     })
 
     -- Clear cache
@@ -62,7 +81,14 @@ function M.setup(opts)
         local stats = cache.stats()
         notify.cache_stats(stats.repos, stats.total_issues, stats.total_details)
     end, {
-        desc = "Show cache statistics"
+        desc = "Show cache statistics",
+    })
+
+    -- Create new issue
+    vim.api.nvim_create_user_command("TicketsCreate", function()
+        create.open_create_buffer()
+    end, {
+        desc = "Create a new GitHub issue",
     })
 
     -- Setup keymap for todo file buffer
@@ -84,7 +110,7 @@ function M.setup_todo_keymap(target_file)
                 vim.api.nvim_win_close(0, true)
             end
         end,
-        desc = "Close todo window (if saved)"
+        desc = "Close todo window (if saved)",
     })
 end
 

@@ -38,7 +38,7 @@ function M.get_current_repo()
     -- Parse owner/repo
     -- Matches: git@github.com:Owner/Repo.git or https://github.com/Owner/Repo.git
     local owner, repo = result:match("github%.com[:/]([%w%-%.]+)/([%w%-%.]+)")
-    
+
     if owner and repo then
         -- Remove .git suffix if present
         repo = repo:gsub("%.git$", "")

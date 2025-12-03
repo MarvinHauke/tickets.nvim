@@ -16,15 +16,7 @@ function M.cache_cleared(repo)
 end
 
 function M.cache_stats(repos, total_issues, total_details)
-    vim.notify(
-        string.format(
-            "Cache Stats:\n- Repositories: %d\n- Total Issues: %d\n- Total Details: %d",
-            repos,
-            total_issues,
-            total_details
-        ),
-        INFO
-    )
+    vim.notify(string.format("Cache Stats:\n- Repositories: %d\n- Total Issues: %d\n- Total Details: %d", repos, total_issues, total_details), INFO)
 end
 
 function M.using_cached_issues(count)
@@ -32,6 +24,10 @@ function M.using_cached_issues(count)
 end
 
 -- Issue fetching notifications
+function M.fetching_issues()
+    vim.notify("Fetching issues...", INFO)
+end
+
 function M.issues_fetched(count)
     vim.notify(string.format("%d issues fetched.", count), INFO)
 end
@@ -46,10 +42,7 @@ end
 
 -- Error notifications
 function M.repo_not_found()
-    vim.notify(
-        "Could not determine current GitHub repository. Are you in a git repo with a 'github.com' origin?",
-        ERROR
-    )
+    vim.notify("Could not determine current GitHub repository. Are you in a git repo with a 'github.com' origin?", ERROR)
 end
 
 function M.repo_determination_failed()
@@ -57,10 +50,7 @@ function M.repo_determination_failed()
 end
 
 function M.gh_auth_missing()
-    vim.notify(
-        "Neither gh CLI nor GITHUB_TOKEN available. Run 'gh auth login' or set GITHUB_TOKEN",
-        WARN
-    )
+    vim.notify("Neither gh CLI nor GITHUB_TOKEN available. Run 'gh auth login' or set GITHUB_TOKEN", WARN)
 end
 
 function M.gh_cli_required()

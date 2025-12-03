@@ -23,8 +23,8 @@ end
 -- @param opts table: Options { delay = ms between fetches, max_concurrent = number }
 function M.start_prefetch(list_buf, repo, issues, opts)
     opts = opts or {}
-    local delay = opts.delay or 500  -- ms between fetches (keeps UI responsive)
-    local max_concurrent = opts.max_concurrent or 1  -- Only 1 at a time to avoid spam
+    local delay = opts.delay or 500 -- ms between fetches (keeps UI responsive)
+    local max_concurrent = opts.max_concurrent or 1 -- Only 1 at a time to avoid spam
 
     -- Cancel existing prefetch for this buffer if any
     M.cancel_prefetch(list_buf)
@@ -66,10 +66,7 @@ function M.start_prefetch(list_buf, repo, issues, opts)
         if #job.queue == 0 then
             prefetch_jobs[list_buf] = nil
             vim.schedule(function()
-                vim.notify(
-                    string.format("Prefetched %d issue details", job.completed),
-                    vim.log.levels.INFO
-                )
+                vim.notify(string.format("Prefetched %d issue details", job.completed), vim.log.levels.INFO)
             end)
             return
         end

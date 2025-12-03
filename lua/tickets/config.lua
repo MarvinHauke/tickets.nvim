@@ -6,8 +6,8 @@ M.defaults = {
     target_file = "todo.md",
     prefetch = {
         enabled = true,
-        delay = 500,           -- ms between fetches
-        max_concurrent = 1,    -- number of concurrent fetches
+        delay = 500, -- ms between fetches
+        max_concurrent = 1, -- number of concurrent fetches
     },
     ui = {
         window = {
@@ -17,7 +17,7 @@ M.defaults = {
             detail_width_ratio = 0.65,
             spacing = 2,
         },
-        border = "rounded",  -- "none", "single", "double", "rounded", "solid", "shadow"
+        border = "rounded", -- "none", "single", "double", "rounded", "solid", "shadow"
     },
 }
 
@@ -29,12 +29,7 @@ M.defaults = {
 local function validate_type(value, expected_type, path)
     local actual_type = type(value)
     if actual_type ~= expected_type then
-        return false, string.format(
-            "Invalid type for '%s': expected %s, got %s",
-            path,
-            expected_type,
-            actual_type
-        )
+        return false, string.format("Invalid type for '%s': expected %s, got %s", path, expected_type, actual_type)
     end
     return true, nil
 end
@@ -47,13 +42,7 @@ end
 -- @return boolean, string|nil: Valid status and error message
 local function validate_range(value, min, max, path)
     if value < min or value > max then
-        return false, string.format(
-            "Value for '%s' must be between %d and %d, got %d",
-            path,
-            min,
-            max,
-            value
-        )
+        return false, string.format("Value for '%s' must be between %d and %d, got %d", path, min, max, value)
     end
     return true, nil
 end
@@ -64,7 +53,12 @@ end
 -- @return boolean, string|nil: Valid status and error message
 local function validate_border(value, path)
     local valid_borders = {
-        "none", "single", "double", "rounded", "solid", "shadow"
+        "none",
+        "single",
+        "double",
+        "rounded",
+        "solid",
+        "shadow",
     }
 
     for _, valid in ipairs(valid_borders) do
@@ -73,12 +67,7 @@ local function validate_border(value, path)
         end
     end
 
-    return false, string.format(
-        "Invalid border style for '%s': must be one of %s, got '%s'",
-        path,
-        table.concat(valid_borders, ", "),
-        value
-    )
+    return false, string.format("Invalid border style for '%s': must be one of %s, got '%s'", path, table.concat(valid_borders, ", "), value)
 end
 
 -- Validate configuration

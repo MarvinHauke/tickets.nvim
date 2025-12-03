@@ -6,14 +6,16 @@ This document outlines planned features, refined concepts, and expanded ideas fo
 
 Enhance the basic interaction with issues directly within Neovim.
 
-| Feature                           | Refined Description                                                                                                                                                                                                   |
-| :-------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **View Issue Details & Comments** | Press `Enter` to view the full body, labels, assignees, and the **full comment history** in a split or floating window. Add the ability to **post new comments** directly from this view.                             |
-| **Edit Issue Metadata**           | New commands/keymaps to **edit** the issue's **title, body, labels, assignees, and milestone** from the detailed view.                                                                                                |
-| **Open in Browser**               | Press `gx` on an issue line to open the corresponding provider page in the default browser.                                                                                                                           |
-| **Create Issue (Advanced)**       | New command `:TicketsCreate` opens a structured buffer (like a form) to draft title and body, and also specify **labels, assignees, and milestones** before submission. Support provider-specific markdown templates. |
-| **Close/Reopen Issue**            | Toggle issue state (open/closed) directly from the list view.                                                                                                                                                         |
-| **Interactive Filtering**         | Support query arguments for fetching (e.g., `:TicketsFetch label:bug assignee:@me`). **Implement a dynamic/interactive filter UI** for on-the-fly filtering and allow **saving favorite filters**.                    |
+| Feature                           | Status | Refined Description                                                                                                                                                                                                   |
+| :-------------------------------- | :----- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **View Issue Details & Comments** | ✅ DONE | Press `Enter` to view the full body, labels, assignees, and the **full comment history** in a split pane. ~~Add the ability to **post new comments** directly from this view.~~ (commenting not yet implemented)     |
+| **Open in Browser**               | ✅ DONE | Press `gx` on an issue line to open the corresponding provider page in the default browser.                                                                                                                           |
+| **Create Issue (Basic)**          | ✅ DONE | New command `:TicketsCreate` opens a structured buffer template to draft title and body before submission via gh CLI.                                                                                                 |
+| **Edit Issue Metadata**           | 📝 Planned | New commands/keymaps to **edit** the issue's **title, body, labels, assignees, and milestone** from the detailed view.                                                                                                |
+| **Create Issue (Advanced)**       | 📝 Planned | Extend `:TicketsCreate` to specify **labels, assignees, and milestones** before submission. Support provider-specific markdown templates.                                                                             |
+| **Close/Reopen Issue**            | 📝 Planned | Toggle issue state (open/closed) directly from the list view.                                                                                                                                                         |
+| **Interactive Filtering**         | 📝 Planned | Support query arguments for fetching (e.g., `:TicketsFetch label:bug assignee:@me`). **Implement a dynamic/interactive filter UI** for on-the-fly filtering and allow **saving favorite filters**.                    |
+| **Post Comments**                 | 📝 Planned | Add the ability to **post new comments** directly from the detail view.                                                                                                                                               |
 
 ---
 
@@ -83,8 +85,9 @@ Deepen the connection between code and issues, adding organizational tools.
 
 Implement a multi-layered approach to issue data management for optimal performance and offline capability.
 
-| Phase | Feature | Description |
-| :--- | :--- | :--- |
-| **Phase 1** | **In-Memory Cache** | Quick-win implementation: Cache fetched issues in memory for the current session. Avoid redundant API calls when navigating between issue list and details view. Invalidate cache on explicit refresh command. |
-| **Phase 2** | **Persistence Layer (JSON/SQLite)** | Add persistent storage in `~/.local/share/nvim/tickets/` directory. Options: <br/>- **JSON**: Simple file-based cache per repository (`{repo-hash}.json`) for lightweight needs<br/>- **SQLite**: Structured database for advanced querying, supporting Telescope integration and complex filters. Include metadata: last sync time, cache freshness policy (e.g., 15min TTL). |
-| **Phase 3** | **User Notes per Issue** | Optional `.tickets/notes/` folder in project root for per-issue annotations and local context. User notes are git-trackable for team collaboration. Keep separate from cache data (cache in data dir, notes in workspace). |
+| Phase | Feature | Status | Description |
+| :--- | :--- | :----- | :--- |
+| **Phase 1** | **In-Memory Cache** | ✅ DONE | Quick-win implementation: Cache fetched issues in memory for the current session. Avoid redundant API calls when navigating between issue list and details view. Invalidate cache on explicit refresh command. |
+| **Phase 2** | **Persistence Layer (JSON)** | ✅ DONE | Persistent storage in `~/.local/share/nvim/tickets/cache/` directory using JSON files. One file per repository (`owner_repo.json`) for lightweight needs. Includes metadata: last sync time. Auto-loads from disk on access. |
+| **Phase 2b** | **Persistence Layer (SQLite)** | 📝 Planned | Optional: Structured database for advanced querying, supporting Telescope integration and complex filters. Would enable cache freshness policy (e.g., 15min TTL) and multi-repo queries. |
+| **Phase 3** | **User Notes per Issue** | 📝 Planned | Optional `.tickets/notes/` folder in project root for per-issue annotations and local context. User notes are git-trackable for team collaboration. Keep separate from cache data (cache in data dir, notes in workspace). |

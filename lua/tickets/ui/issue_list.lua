@@ -89,9 +89,81 @@ local function setup_autocmds(buf, issues, repo, win)
         buffer = buf,
         callback = function()
             issue_detail.close_detail_preview(buf)
-            prefetch.cancel_prefetch(buf)  -- Stop background prefetching
+            prefetch.cancel_prefetch(buf) -- Stop background prefetching
         end,
     })
+end
+
+-- Open a loading window immediately (before data is fetched)
+-- @param repo string: Repository in "owner/repo" format
+-- @return number, number: Buffer and window handles
+function M.open_loading_window(repo)
+    local buf = vim.api.nvim_create_buf(false, true) -- scratch buffer
+    local lines = {
+        "Loading issues from " .. repo .. "...",
+        "",
+        "Please wait...",
+    }
+
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    vim.bo[buf].modifiable = false
+    vim.bo[buf].bufhidden = "wipe"
+    vim.bo[buf].filetype = "markdown"
+
+    -- Store repo in buffer variable
+    vim.b[buf].tickets_repo = repo
+
+    local win = vim.api.nvim_open_win(buf, true, config.create_list_window_config())
+
+    -- Map `q` to close window immediately
+    vim.keymap.set("n", "q", function()
+        vim.api.nvim_win_close(win, true)
+    end, { buffer = buf, silent = true })
+
+    return buf, win
+end
+
+-- Update an existing window with fetched issues
+-- @param buf number: Buffer handle from open_loading_window
+-- @param win number: Window handle from open_loading_window
+-- @param issues table: Array of issue objects from GitHub API
+-- @param repo string: Repository in "owner/repo" format
+function M.update_issues_window(buf, win, issues, repo)
+    -- Check if buffer and window are still valid
+    if not vim.api.nvim_buf_is_valid(buf) or not vim.api.nvim_win_is_valid(win) then
+        -- Window was closed while loading, create a new one
+        M.open_issues_window(issues, repo)
+        return
+    end
+
+    -- Update buffer content
+    local lines = {}
+    for _, issue in ipairs(issues) do
+        table.insert(lines, formatters.format_issue_list_entry(issue))
+    end
+
+    if #lines == 0 then
+        table.insert(lines, "No issues found.")
+    end
+
+    vim.bo[buf].modifiable = true
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    vim.bo[buf].modifiable = false
+
+    -- Store issues data in buffer variable
+    vim.b[buf].tickets_issues = issues
+
+    -- Setup keymaps and autocmds now that we have the data
+    setup_keymaps(buf, win, issues, repo)
+    setup_autocmds(buf, issues, repo, win)
+
+    -- Start background prefetching
+    vim.schedule(function()
+        prefetch.start_prefetch(buf, repo, issues, {
+            delay = 500,
+            max_concurrent = 1,
+        })
+    end)
 end
 
 -- Open a floating window with the GitHub issues list
@@ -128,8 +200,8 @@ function M.open_issues_window(issues, repo)
     -- Only fetches 1 at a time to avoid overwhelming the API
     vim.schedule(function()
         prefetch.start_prefetch(buf, repo, issues, {
-            delay = 500,           -- ms between fetches
-            max_concurrent = 1,    -- fetch one at a time
+            delay = 500, -- ms between fetches
+            max_concurrent = 1, -- fetch one at a time
         })
     end)
 end

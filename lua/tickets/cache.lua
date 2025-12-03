@@ -1,7 +1,9 @@
--- In-memory cache for GitHub issues
--- Phase 1: Session-based caching to avoid redundant API calls
+-- In-memory cache for GitHub issues with persistent storage
+-- Phase 1: Session-based in-memory caching
+-- Phase 2: Persistent JSON file caching in ~/.local/share/nvim/tickets/cache/
 
 local M = {}
+local persistence = require("tickets.persistence")
 
 -- Cache structure:
 -- {
@@ -15,11 +17,52 @@ local M = {}
 -- }
 local cache = {}
 
+-- Load cache from disk on first access
+local loaded_repos = {}
+
+-- Load persistent cache for a repo if not already loaded
+-- @param repo string: Repository in "owner/repo" format
+local function ensure_loaded(repo)
+    if loaded_repos[repo] then
+        return
+    end
+
+    local data = persistence.load(repo)
+    if data and data.issues then
+        cache[repo] = {
+            issues = data.issues,
+            issue_details = data.issue_details or {},
+        }
+    end
+
+    loaded_repos[repo] = true
+end
+
+-- Save cache to disk
+-- @param repo string: Repository in "owner/repo" format
+local function persist(repo)
+    if not cache[repo] then
+        return
+    end
+
+    persistence.save(repo, {
+        issues = cache[repo].issues,
+        issue_details = cache[repo].issue_details,
+    })
+end
+
 -- Get cached issues list for a repository
 -- @param repo string: Repository in "owner/repo" format
 -- @return table|nil: Cached issues array or nil if not cached
 function M.get_issues(repo)
-    if not repo or not cache[repo] then
+    if not repo then
+        return nil
+    end
+
+    -- Load from disk if not in memory
+    ensure_loaded(repo)
+
+    if not cache[repo] then
         return nil
     end
     return cache[repo].issues
@@ -36,11 +79,15 @@ function M.set_issues(repo, issues)
     if not cache[repo] then
         cache[repo] = {
             issues = {},
-            issue_details = {}
+            issue_details = {},
         }
     end
 
     cache[repo].issues = issues
+    loaded_repos[repo] = true
+
+    -- Persist to disk
+    persist(repo)
 end
 
 -- Get cached detailed issue data
@@ -48,7 +95,14 @@ end
 -- @param issue_number number: Issue number
 -- @return table|nil: Cached issue details or nil if not cached
 function M.get_issue_details(repo, issue_number)
-    if not repo or not issue_number or not cache[repo] then
+    if not repo or not issue_number then
+        return nil
+    end
+
+    -- Load from disk if not in memory
+    ensure_loaded(repo)
+
+    if not cache[repo] then
         return nil
     end
     return cache[repo].issue_details[issue_number]
@@ -63,14 +117,21 @@ function M.set_issue_details(repo, issue_number, details)
         return
     end
 
+    -- Ensure repo is loaded
+    ensure_loaded(repo)
+
     if not cache[repo] then
         cache[repo] = {
             issues = {},
-            issue_details = {}
+            issue_details = {},
         }
     end
 
     cache[repo].issue_details[issue_number] = details
+    loaded_repos[repo] = true
+
+    -- Persist to disk
+    persist(repo)
 end
 
 -- Invalidate cache for a specific repository or all repositories
@@ -78,8 +139,14 @@ end
 function M.invalidate(repo)
     if repo then
         cache[repo] = nil
+        loaded_repos[repo] = nil
+        -- Delete from disk
+        persistence.delete(repo)
     else
         cache = {}
+        loaded_repos = {}
+        -- Clear all from disk
+        persistence.clear_all()
     end
 end
 
@@ -89,7 +156,7 @@ function M.stats()
     local stats = {
         repos = 0,
         total_issues = 0,
-        total_details = 0
+        total_details = 0,
     }
 
     for repo, data in pairs(cache) do
