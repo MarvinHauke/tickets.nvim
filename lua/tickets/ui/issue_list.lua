@@ -5,6 +5,7 @@ local config = require("tickets.ui.config")
 local formatters = require("tickets.ui.formatters")
 local issue_detail = require("tickets.ui.issue_detail")
 local prefetch = require("tickets.ui.prefetch")
+local utils = require("tickets.utils")
 
 -- Find which issue line the cursor is on
 -- @param buf number: Buffer handle
@@ -54,7 +55,7 @@ local function setup_keymaps(buf, win, issues, repo)
         if issue then
             local url = issue.html_url
             if url then
-                vim.fn.jobstart({ "open", url }, { detach = true })
+                utils.open_url(url)
                 vim.notify("Opening issue in browser...", vim.log.levels.INFO)
             end
         end

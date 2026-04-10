@@ -46,7 +46,7 @@ For detailed information on installation, configuration, and advanced usage, che
 - **Issue Browser**: View open issues with `:TicketsGithubFetch`.
 - **Deep Dive**: Press `<Enter>` on an issue to view the full description, metadata, and comments.
 - **Performance**: Smart in-memory caching for instant subsequent loads.
-- **Flexible Auth**: Works seamlessly with the `gh` CLI or `GITHUB_TOKEN`.
+- **GitHub CLI**: Requires the [`gh` CLI](https://cli.github.com/) for GitHub features (`gh auth login`).
 
 ## 📦 Installation
 

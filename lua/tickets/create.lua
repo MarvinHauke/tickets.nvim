@@ -268,7 +268,8 @@ function M.submit_issue(buf)
         cache.invalidate(repo)
 
         -- Optionally open the URL in browser
-        vim.fn.jobstart({ "open", url }, { detach = true })
+        local utils = require("tickets.utils")
+        utils.open_url(url)
     end)
 end
 
