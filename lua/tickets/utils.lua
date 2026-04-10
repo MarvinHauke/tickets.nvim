@@ -48,4 +48,24 @@ function M.get_current_repo()
     return nil
 end
 
+function M.get_open_command()
+    local sysname = vim.loop.os_uname().sysname
+    if sysname == "Darwin" then
+        return "open"
+    elseif sysname == "Windows_NT" then
+        return "cmd"
+    else
+        return "xdg-open"
+    end
+end
+
+function M.open_url(url)
+    local cmd = M.get_open_command()
+    if cmd == "cmd" then
+        vim.fn.jobstart({ "cmd", "/c", "start", url }, { detach = true })
+    else
+        vim.fn.jobstart({ cmd, url }, { detach = true })
+    end
+end
+
 return M

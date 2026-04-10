@@ -4,7 +4,7 @@ local utils = require("tickets.utils")
 local cache = require("tickets.cache")
 local M = {}
 
--- Check if gh CLI is available and authenticated
+-- Check if gh CLI is available and authenticated via keyring
 local function is_gh_available()
     local handle = io.popen("gh auth status 2>&1")
     if not handle then
@@ -13,7 +13,14 @@ local function is_gh_available()
     local result = handle:read("*a")
     handle:close()
 
-    -- Check if logged in AND that there's no invalid token error
+    -- Check for a valid keyring-based login, which is reliable even when
+    -- GITHUB_TOKEN is set but invalid
+    local has_keyring = result:match("Logged in to github%.com account %S+ %(keyring%)") ~= nil
+    if has_keyring then
+        return true
+    end
+
+    -- Fall back to checking for any valid login without token errors
     local has_login = result:match("Logged in") ~= nil
     local has_invalid_token = result:match("invalid") ~= nil or result:match("Failed to log in") ~= nil
 

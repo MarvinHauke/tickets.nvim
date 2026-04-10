@@ -2,6 +2,8 @@
 
 Tickets.nvim requires **Neovim >= 0.8.0** and depends on [plenary.nvim](https://github.com/nvim-lua/plenary.nvim).
 
+GitHub features require the [GitHub CLI (`gh`)](https://cli.github.com/) to be installed and authenticated via `gh auth login`.
+
 ## using lazy.nvim
 
 ```lua
