@@ -9,6 +9,7 @@ M.defaults = {
         delay = 500, -- ms between fetches
         max_concurrent = 1, -- number of concurrent fetches
     },
+    confirm_submit = true, -- prompt "Yes/No" before submitting edits, comments, and new issues
     ui = {
         window = {
             total_width_ratio = 0.9,
@@ -123,6 +124,14 @@ function M.validate(config)
                     end
                 end
             end
+        end
+    end
+
+    -- Validate confirm_submit
+    if config.confirm_submit ~= nil then
+        local ok, err = validate_type(config.confirm_submit, "boolean", "confirm_submit")
+        if not ok then
+            table.insert(errors, err)
         end
     end
 

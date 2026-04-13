@@ -2,23 +2,24 @@
 local M = {}
 
 local ui = require("tickets.ui")
-local utils = require("tickets.utils")
 local github = require("tickets.github")
 local cache = require("tickets.cache")
 local notify = require("tickets.notifications")
-local create = require("tickets.create")
 
 -- Register all user commands
--- @param opts table: Configuration options { target_file = "todo.md" }
-function M.setup(opts)
-    opts = opts or {}
-    local target_file = opts.target_file or "todo.md"
+function M.setup()
 
-    -- Open local todo file
+    -- Open issues buffer (uses cache for instant display, fetches if no cache)
     vim.api.nvim_create_user_command("Tickets", function()
-        ui.open_floating_file(target_file)
+        local buf, win, repo = ui.open_loading_window()
+        if not buf then
+            return
+        end
+        github.fetch_issues(function(issues)
+            ui.update_issues_window(buf, win, issues, repo)
+        end)
     end, {
-        desc = "Open todo file in floating window",
+        desc = "Open issues overview",
     })
 
     -- Fetch GitHub issues (uses cache)
@@ -84,34 +85,13 @@ function M.setup(opts)
         desc = "Show cache statistics",
     })
 
-    -- Create new issue
+    -- Create new issue (opens list+detail layout in create mode)
     vim.api.nvim_create_user_command("TicketsCreate", function()
-        create.open_create_buffer()
+        ui.open_with_create_mode()
     end, {
         desc = "Create a new GitHub issue",
     })
 
-    -- Setup keymap for todo file buffer
-    M.setup_todo_keymap(target_file)
-end
-
--- Setup keymap for the todo file buffer
--- @param target_file string: Path to todo file
-function M.setup_todo_keymap(target_file)
-    local buf = utils.get_or_create_buf(target_file)
-
-    vim.api.nvim_buf_set_keymap(buf, "n", "q", "", {
-        noremap = true,
-        silent = true,
-        callback = function()
-            if vim.api.nvim_get_option_value("modified", { buf = buf }) then
-                notify.save_changes_first()
-            else
-                vim.api.nvim_win_close(0, true)
-            end
-        end,
-        desc = "Close todo window (if saved)",
-    })
 end
 
 return M

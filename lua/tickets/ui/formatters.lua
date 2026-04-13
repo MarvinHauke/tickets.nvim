@@ -89,4 +89,14 @@ function M.format_issue_list_entry(issue)
     return string.format("#%d %s", issue.number, issue.title)
 end
 
+-- Format the hint/help lines for the issue list footer
+-- @param state string: "open" or "closed"
+-- @return table: Array of hint lines (split for narrow windows)
+function M.format_hint_lines(state)
+    local filter = state == "open" and "f:closed" or "f:open"
+    return {
+        filter .. "  n:new  q:quit",
+    }
+end
+
 return M

@@ -134,6 +134,20 @@ function M.set_issue_details(repo, issue_number, details)
     persist(repo)
 end
 
+-- Invalidate cached details for a single issue (e.g. after posting a comment)
+-- @param repo string: Repository in "owner/repo" format
+-- @param issue_number number: Issue number
+function M.invalidate_issue_details(repo, issue_number)
+    if not repo or not issue_number then
+        return
+    end
+    ensure_loaded(repo)
+    if cache[repo] and cache[repo].issue_details then
+        cache[repo].issue_details[issue_number] = nil
+        persist(repo)
+    end
+end
+
 -- Invalidate cache for a specific repository or all repositories
 -- @param repo string|nil: Repository to invalidate, or nil to clear all
 function M.invalidate(repo)

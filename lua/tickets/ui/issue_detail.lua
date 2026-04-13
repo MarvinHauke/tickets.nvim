@@ -2,7 +2,7 @@
 local M = {}
 
 local config = require("tickets.ui.config")
-local formatters = require("tickets.ui.formatters")
+local detail_mode = require("tickets.ui.detail_mode")
 
 -- Track the detail preview window per list buffer
 local detail_windows = {}
@@ -21,12 +21,13 @@ function M.close_detail_preview(list_buf)
         if detail_info.buf and vim.api.nvim_buf_is_valid(detail_info.buf) then
             vim.api.nvim_buf_delete(detail_info.buf, { force = true })
         end
+        detail_mode.cleanup(list_buf)
         detail_windows[list_buf] = nil
-        last_viewed_issue[list_buf] = nil -- Clear tracking
+        last_viewed_issue[list_buf] = nil
     end
 end
 
--- Update detail preview with current issue
+-- Update detail preview with current issue (only in view mode)
 -- @param list_buf number: Buffer handle of the issue list
 -- @param issue table: Issue object to display
 -- @param repo string: Repository in "owner/repo" format
@@ -35,58 +36,66 @@ function M.update_detail_preview(list_buf, issue, repo)
         return
     end
 
-    -- Skip if we're already viewing this issue
+    -- Don't overwrite active edit/create/comment
+    if detail_mode.is_active(list_buf) then
+        return
+    end
+
+    -- Skip if already viewing this issue
     if last_viewed_issue[list_buf] == issue.number then
         return
     end
 
-    -- Update tracking
     last_viewed_issue[list_buf] = issue.number
 
     local detail_info = detail_windows[list_buf]
-    local cache = require("tickets.cache")
+    detail_mode.enter_view_mode(list_buf, detail_info.buf, issue, repo)
+end
 
-    -- Check cache first for instant display
-    local cached_details = cache.get_issue_details(repo, issue.number)
-    if cached_details then
-        -- Instant display from cache
-        local lines = formatters.format_issue_details(cached_details)
-        vim.bo[detail_info.buf].modifiable = true
-        vim.api.nvim_buf_set_lines(detail_info.buf, 0, -1, false, lines)
-        vim.bo[detail_info.buf].modifiable = false
-        return
+-- Ensure detail window exists, creating it if needed
+-- @param list_buf number
+-- @param list_win number
+-- @return table|nil: detail_info { buf, win }
+local function ensure_detail_window(list_buf, list_win)
+    if detail_windows[list_buf] then
+        return detail_windows[list_buf]
     end
 
-    -- Not in cache - show loading and fetch
-    vim.bo[detail_info.buf].modifiable = true
-    vim.api.nvim_buf_set_lines(detail_info.buf, 0, -1, false, { "Loading issue details..." })
-    vim.bo[detail_info.buf].modifiable = false
+    local detail_buf = vim.api.nvim_create_buf(false, true)
+    vim.bo[detail_buf].bufhidden = "wipe"
+    vim.bo[detail_buf].filetype = "markdown"
 
-    require("tickets.github").fetch_issue_details(repo, issue.number, function(detailed_issue, err)
-        vim.schedule(function()
-            -- Check if buffer is still valid before accessing it
-            if not vim.api.nvim_buf_is_valid(detail_info.buf) then
-                return
+    local detail_win = vim.api.nvim_open_win(detail_buf, false, config.create_detail_window_config(list_win))
+
+    detail_windows[list_buf] = {
+        buf = detail_buf,
+        win = detail_win,
+    }
+
+    -- q on detail buffer returns to list or closes detail
+    vim.keymap.set("n", "q", function()
+        if detail_mode.is_active(list_buf) then
+            detail_mode.cancel_mode(list_buf, detail_buf)
+            -- Return focus to list window
+            if list_win and vim.api.nvim_win_is_valid(list_win) then
+                vim.api.nvim_set_current_win(list_win)
             end
+        else
+            M.close_detail_preview(list_buf)
+        end
+    end, { buffer = detail_buf, silent = true, desc = "Close/cancel detail" })
 
-            -- Check if user has moved to a different issue while we were loading
-            if last_viewed_issue[list_buf] ~= issue.number then
-                return -- Stale request, ignore
+    -- <leader>s on detail buffer submits current mode
+    vim.keymap.set("n", "<leader>s", function()
+        detail_mode.submit(list_buf, detail_buf, function()
+            -- Return focus to list
+            if list_win and vim.api.nvim_win_is_valid(list_win) then
+                vim.api.nvim_set_current_win(list_win)
             end
-
-            if err or not detailed_issue then
-                vim.bo[detail_info.buf].modifiable = true
-                vim.api.nvim_buf_set_lines(detail_info.buf, 0, -1, false, { "Error loading details: " .. (err or "unknown error") })
-                vim.bo[detail_info.buf].modifiable = false
-                return
-            end
-
-            local lines = formatters.format_issue_details(detailed_issue)
-            vim.bo[detail_info.buf].modifiable = true
-            vim.api.nvim_buf_set_lines(detail_info.buf, 0, -1, false, lines)
-            vim.bo[detail_info.buf].modifiable = false
         end)
-    end)
+    end, { buffer = detail_buf, silent = true, desc = "Submit" })
+
+    return detail_windows[list_buf]
 end
 
 -- Show or toggle issue detail preview
@@ -100,38 +109,72 @@ function M.show_issue_detail_preview(list_buf, issue, repo, list_win)
         return
     end
 
-    -- If detail window exists, close it (toggle behavior)
-    if detail_windows[list_buf] then
+    -- If detail window exists and in view mode, close it (toggle)
+    if detail_windows[list_buf] and not detail_mode.is_active(list_buf) then
         M.close_detail_preview(list_buf)
         return
     end
 
-    -- Create detail preview window
-    local detail_buf = vim.api.nvim_create_buf(false, true)
-    vim.bo[detail_buf].bufhidden = "wipe"
-    vim.bo[detail_buf].filetype = "markdown"
+    local detail_info = ensure_detail_window(list_buf, list_win)
+    if not detail_info then
+        return
+    end
 
-    local detail_win = vim.api.nvim_open_win(detail_buf, false, config.create_detail_window_config(list_win))
+    last_viewed_issue[list_buf] = nil -- force refresh
+    detail_mode.enter_view_mode(list_buf, detail_info.buf, issue, repo)
+end
 
-    -- Track this detail window
-    detail_windows[list_buf] = {
-        buf = detail_buf,
-        win = detail_win,
-        auto_preview = true,
-    }
+-- Enter edit mode for an issue in the detail pane
+-- @param list_buf number
+-- @param issue table
+-- @param repo string
+-- @param list_win number
+function M.enter_edit_mode(list_buf, issue, repo, list_win)
+    local detail_info = ensure_detail_window(list_buf, list_win)
+    if not detail_info then
+        return
+    end
+    detail_mode.enter_edit_mode(list_buf, detail_info.buf, detail_info.win, issue, repo)
+end
 
-    -- Add keymaps to detail window
-    vim.keymap.set("n", "q", function()
-        M.close_detail_preview(list_buf)
-    end, { buffer = detail_buf, silent = true, desc = "Close detail preview" })
+-- Enter create mode in the detail pane
+-- @param list_buf number
+-- @param repo string
+-- @param list_win number
+-- @param seed_text string|nil
+function M.enter_create_mode(list_buf, repo, list_win, seed_text)
+    local detail_info = ensure_detail_window(list_buf, list_win)
+    if not detail_info then
+        return
+    end
+    detail_mode.enter_create_mode(list_buf, detail_info.buf, detail_info.win, repo, seed_text)
+end
 
-    -- Load the details
-    M.update_detail_preview(list_buf, issue, repo)
+-- Enter comment mode in the detail pane
+-- @param list_buf number
+-- @param issue table
+-- @param repo string
+-- @param list_win number
+function M.enter_comment_mode(list_buf, issue, repo, list_win)
+    local detail_info = ensure_detail_window(list_buf, list_win)
+    if not detail_info then
+        return
+    end
+    -- First ensure we're showing this issue's details
+    if not detail_mode.is_active(list_buf) then
+        last_viewed_issue[list_buf] = nil
+        detail_mode.enter_view_mode(list_buf, detail_info.buf, issue, repo)
+    end
+    -- Then enter comment mode (view mode will have just set the content)
+    -- Small delay to let view mode render before appending comment area
+    vim.schedule(function()
+        detail_mode.enter_comment_mode(list_buf, detail_info.buf, detail_info.win, issue, repo)
+    end)
 end
 
 -- Check if detail preview is open for a given list buffer
 -- @param list_buf number: Buffer handle of the issue list
--- @return boolean: True if detail window exists
+-- @return boolean
 function M.has_detail_preview(list_buf)
     return detail_windows[list_buf] ~= nil
 end

@@ -33,13 +33,18 @@ local function get_github_token()
 end
 
 -- Fetch issues using gh CLI
-local function fetch_issues_gh(repo, callback)
-    local api_url = "repos/" .. repo .. "/issues"
+-- @param repo string: "owner/repo"
+-- @param callback function: Called with (issues)
+-- @param opts table|nil: { state = "open"|"closed", per_page = number, page = number }
+local function fetch_issues_gh(repo, callback, opts)
+    opts = opts or {}
+    local state = opts.state or "open"
+    local per_page = opts.per_page or 30
+    local page = opts.page or 1
+    local api_url = "repos/" .. repo .. "/issues?state=" .. state .. "&per_page=" .. per_page .. "&page=" .. page
 
     local stderr_data = {}
 
-    -- Use env -u to explicitly unset GITHUB_TOKEN to force gh CLI to use keyring authentication
-    -- This prevents issues when GITHUB_TOKEN is set but invalid
     vim.fn.jobstart({ "env", "-u", "GITHUB_TOKEN", "gh", "api", api_url }, {
         stdout_buffered = true,
         stderr_buffered = true,
@@ -81,8 +86,13 @@ local function fetch_issues_gh(repo, callback)
 end
 
 -- Fetch issues using curl (fallback when gh CLI unavailable)
-local function fetch_issues_curl(repo, callback)
-    local api_url = "https://api.github.com/repos/" .. repo .. "/issues"
+-- @param opts table|nil: { state = "open"|"closed", per_page = number, page = number }
+local function fetch_issues_curl(repo, callback, opts)
+    opts = opts or {}
+    local state = opts.state or "open"
+    local per_page = opts.per_page or 30
+    local page = opts.page or 1
+    local api_url = "https://api.github.com/repos/" .. repo .. "/issues?state=" .. state .. "&per_page=" .. per_page .. "&page=" .. page
     local headers = {
         ["Accept"] = "application/vnd.github.v3+json",
     }
@@ -119,15 +129,21 @@ local function fetch_issues_curl(repo, callback)
 end
 
 -- Main fetch function with gh CLI support and fallback
-function M.fetch_issues(callback, force_refresh)
+-- @param callback function: Called with (issues)
+-- @param force_refresh boolean|nil: Bypass cache if true
+-- @param opts table|nil: { state = "open"|"closed", per_page = number, page = number }
+function M.fetch_issues(callback, force_refresh, opts)
+    opts = opts or {}
+    local state = opts.state or "open"
+
     local repo = utils.get_current_repo()
     if not repo then
         vim.notify("Could not determine current GitHub repository. Are you in a git repo with a 'github.com' origin?", vim.log.levels.ERROR)
         return
     end
 
-    -- Check cache first (unless force_refresh is true)
-    if not force_refresh then
+    -- Only cache open issues; closed issues always fetch fresh
+    if not force_refresh and state == "open" then
         local cached_issues = cache.get_issues(repo)
         if cached_issues then
             vim.notify("Using cached issues (" .. #cached_issues .. " issues)", vim.log.levels.INFO)
@@ -138,9 +154,9 @@ function M.fetch_issues(callback, force_refresh)
         end
     end
 
-    -- Wrap callback to cache the results
+    -- Wrap callback to cache open issues only
     local cache_wrapper = function(issues)
-        if issues then
+        if issues and state == "open" then
             cache.set_issues(repo, issues)
         end
         if callback then
@@ -149,14 +165,14 @@ function M.fetch_issues(callback, force_refresh)
     end
 
     if is_gh_available() then
-        fetch_issues_gh(repo, cache_wrapper)
+        fetch_issues_gh(repo, cache_wrapper, opts)
     else
         local token = get_github_token()
         if token == "" then
             vim.notify("Neither gh CLI nor GITHUB_TOKEN available. Run 'gh auth login' or set GITHUB_TOKEN", vim.log.levels.WARN)
             return
         end
-        fetch_issues_curl(repo, cache_wrapper)
+        fetch_issues_curl(repo, cache_wrapper, opts)
     end
 end
 
@@ -251,6 +267,123 @@ function M.fetch_issue_details(repo, issue_number, callback, force_refresh)
             check_complete()
         end,
     })
+end
+
+-- Helper to run a gh api command with JSON payload via stdin
+-- @param args table: Arguments for gh api (url, method, etc.)
+-- @param payload string: JSON payload to send via stdin
+-- @param callback function: Called with (exit_code, stdout, stderr)
+local function gh_api_with_payload(args, payload, callback)
+    local cmd = { "env", "-u", "GITHUB_TOKEN", "gh", "api" }
+    for _, arg in ipairs(args) do
+        table.insert(cmd, arg)
+    end
+    table.insert(cmd, "--input")
+    table.insert(cmd, "-")
+
+    local stdout_data = {}
+    local stderr_data = {}
+
+    local job_id = vim.fn.jobstart(cmd, {
+        stdout_buffered = true,
+        stderr_buffered = true,
+        on_stdout = function(_, data)
+            if data then
+                vim.list_extend(stdout_data, data)
+            end
+        end,
+        on_stderr = function(_, data)
+            if data then
+                vim.list_extend(stderr_data, data)
+            end
+        end,
+        on_exit = function(_, exit_code)
+            vim.schedule(function()
+                callback(exit_code, table.concat(stdout_data, "\n"), table.concat(stderr_data, "\n"))
+            end)
+        end,
+    })
+
+    if job_id > 0 then
+        vim.fn.chansend(job_id, payload)
+        vim.fn.chanclose(job_id, "stdin")
+    else
+        vim.schedule(function()
+            callback(-1, "", "Failed to start gh CLI")
+        end)
+    end
+end
+
+-- Toggle issue state (open/closed)
+-- @param repo string: "owner/repo"
+-- @param issue_number number: Issue number
+-- @param new_state string: "open" or "closed"
+-- @param callback function: Called with (success, error)
+function M.toggle_issue_state(repo, issue_number, new_state, callback)
+    if not is_gh_available() then
+        vim.notify("gh CLI is required for updating issues", vim.log.levels.ERROR)
+        return
+    end
+
+    local api_url = "repos/" .. repo .. "/issues/" .. issue_number
+    local payload = vim.fn.json_encode({ state = new_state })
+
+    gh_api_with_payload({ api_url, "--method", "PATCH" }, payload, function(exit_code)
+        if exit_code == 0 then
+            cache.invalidate(repo)
+            callback(true, nil)
+        else
+            callback(false, "Failed to update issue state")
+        end
+    end)
+end
+
+-- Post a comment on an issue
+-- @param repo string: "owner/repo"
+-- @param issue_number number: Issue number
+-- @param body string: Comment body text
+-- @param callback function: Called with (success, error)
+function M.post_comment(repo, issue_number, body, callback)
+    if not is_gh_available() then
+        vim.notify("gh CLI is required for posting comments", vim.log.levels.ERROR)
+        return
+    end
+
+    local api_url = "repos/" .. repo .. "/issues/" .. issue_number .. "/comments"
+    local payload = vim.fn.json_encode({ body = body })
+
+    gh_api_with_payload({ api_url, "--method", "POST" }, payload, function(exit_code)
+        if exit_code == 0 then
+            cache.invalidate_issue_details(repo, issue_number)
+            callback(true, nil)
+        else
+            callback(false, "Failed to post comment")
+        end
+    end)
+end
+
+-- Edit issue metadata (title, body, labels, assignees)
+-- @param repo string: "owner/repo"
+-- @param issue_number number: Issue number
+-- @param updates table: { title?, body?, labels?, assignees? }
+-- @param callback function: Called with (success, error)
+function M.edit_issue(repo, issue_number, updates, callback)
+    if not is_gh_available() then
+        vim.notify("gh CLI is required for editing issues", vim.log.levels.ERROR)
+        return
+    end
+
+    local api_url = "repos/" .. repo .. "/issues/" .. issue_number
+    local payload = vim.fn.json_encode(updates)
+
+    gh_api_with_payload({ api_url, "--method", "PATCH" }, payload, function(exit_code)
+        if exit_code == 0 then
+            cache.invalidate(repo)
+            callback(true, nil)
+        else
+            callback(false, "Failed to edit issue")
+        end
+    end)
 end
 
 return M

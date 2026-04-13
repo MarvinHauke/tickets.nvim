@@ -23,7 +23,7 @@ function M.setup(opts)
     M.config = validated_config
 
     -- Register all commands
-    commands.setup(validated_config)
+    commands.setup()
 end
 
 return M

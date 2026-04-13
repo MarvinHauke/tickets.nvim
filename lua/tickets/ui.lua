@@ -67,4 +67,32 @@ function M.update_issues_window(buf, win, issues, repo)
     issue_list.update_issues_window(buf, win, issues, repo)
 end
 
+-- Open the issue list+detail layout with the detail pane in create mode
+-- @param seed_text string|nil: Optional text to pre-fill in the issue body
+function M.open_with_create_mode(seed_text)
+    local repo = utils.get_current_repo()
+    if not repo then
+        vim.notify("Could not determine repository", vim.log.levels.ERROR)
+        return
+    end
+
+    local buf, win = issue_list.open_loading_window(repo)
+    if not buf then
+        return
+    end
+
+    local github = require("tickets.github")
+    github.fetch_issues(function(issues)
+        vim.schedule(function()
+            if not vim.api.nvim_buf_is_valid(buf) then
+                return
+            end
+            issue_list.update_issues_window(buf, win, issues, repo)
+            -- Enter create mode in detail pane after list is ready
+            local issue_detail = require("tickets.ui.issue_detail")
+            issue_detail.enter_create_mode(buf, repo, win, seed_text)
+        end)
+    end)
+end
+
 return M

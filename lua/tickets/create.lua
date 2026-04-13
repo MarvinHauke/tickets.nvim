@@ -5,7 +5,7 @@ local utils = require("tickets.utils")
 local notify = require("tickets.notifications")
 
 -- Template for new issue buffer
-local function get_issue_template()
+function M.get_issue_template()
     return {
         "---",
         "labels: []",
@@ -38,7 +38,7 @@ end
 -- Parse the issue from the buffer content
 -- @param lines table: Array of buffer lines
 -- @return table|nil: { title, body, labels, assignees } or nil if invalid
-local function parse_issue_from_buffer(lines)
+function M.parse_issue_from_buffer(lines)
     local title = nil
     local body_lines = {}
     local labels = {}
@@ -123,7 +123,7 @@ end
 -- @param repo string: Repository in "owner/repo" format
 -- @param issue table: { title, body, labels, assignees }
 -- @param callback function: Called with (issue_url, error)
-local function create_issue_gh(repo, issue, callback)
+function M.create_issue_gh(repo, issue, callback)
     local cmd = {
         "env",
         "-u",
@@ -197,7 +197,7 @@ function M.open_create_buffer()
 
     -- Create scratch buffer
     local buf = vim.api.nvim_create_buf(false, true)
-    local lines = get_issue_template()
+    local lines = M.get_issue_template()
 
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
     vim.bo[buf].filetype = "markdown"
@@ -239,7 +239,7 @@ function M.submit_issue(buf)
     local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
 
     -- Parse issue
-    local issue, err = parse_issue_from_buffer(lines)
+    local issue, err = M.parse_issue_from_buffer(lines)
     if not issue then
         vim.notify("Error: " .. (err or "Invalid issue format"), vim.log.levels.ERROR)
         return
@@ -249,7 +249,7 @@ function M.submit_issue(buf)
     vim.notify("Creating issue...", vim.log.levels.INFO)
 
     -- Create issue
-    create_issue_gh(repo, issue, function(url, error)
+    M.create_issue_gh(repo, issue, function(url, error)
         if error then
             vim.notify("Failed to create issue: " .. error, vim.log.levels.ERROR)
             return
